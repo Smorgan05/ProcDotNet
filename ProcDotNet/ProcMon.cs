@@ -1,78 +1,86 @@
-﻿using System;
+﻿using CsvHelper.Configuration.Attributes;
+using System;
 
-public class Data
+namespace ProcNet
 {
-    public ProcMon()
+    public class ProcMon
     {
-        public AppData appData { get; set; }
-        public EventDetails eventDetails { get; set; }
-        public ProcessManage processManage { get; set; }
-    }
+        /// <summary>
+        /// POST Process
+        /// </summary>
+        public bool isRegistry = false;
+        public bool isFileSystem = false;
+        public bool isNetwork = false;
+        public bool isProcess = false;
+        public bool isProfiling = false;
 
-	public AppData()
-	{
+        /// <summary>
+        /// Nested Processes
+        /// </summary>
+        public bool hasChildren = false;
+
+        /// <summary>
+        /// RAW Processed Attributes
+        /// </summary>
+        //Application Data
         [Name("Process Name")]
-        public string ProcessName { get; set; }
+        public required string ProcessName { get; set; }
         [Name("Image Path")]
-        public string ImagePath { get; set; }
+        public required string ImagePath { get; set; }
         [Name("Command Line")]
-        public string CommandLine { get; set; }
+        public string? CommandLine { get; set; }
         [Name("Company")]
-        public string Company { get; set; }
+        public string? Company { get; set; }
         [Name("Description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [Name("Version")]
-        public string Version { get; set; }
+        public string? Version { get; set; }
         [Name("Architecture")]
-        public string Architecture { get; set; }
-    }
+        public required string Architecture { get; set; }
 
-	public EventDetails()
-	{
+        //Event Details
         [Name("Sequence")]
-        public int SequenceNumber { get; set; }
+        public string? SequenceNumber { get; set; }
         [Name("Event Class")]
-        public int EventClass { get; set; }
+        public required string EventClass { get; set; }
         [Name("Operation")]
-        public int Operation { get; set; }
+        public required string Operation { get; set; }
         [Name("Date & Time")]
-        public int DateAndTime { get; set; }
+        public required DateTime DateAndTime { get; set; }
         [Name("Time of Day")]
-        public string Time { get; set; }
+        public string? Time { get; set; }
         [Name("Category")]
-        public string Category { get; set; }
+        public string? Category { get; set; }
         [Name("Path")]
-        public int Path { get; set; }
+        public string? Path { get; set; }
         [Name("Detail")]
-        public int Detail { get; set; }
+        public string? Detail { get; set; }
         [Name("Result")]
-        public int Result { get; set; }
+        public string? Result { get; set; }
         [Name("Relative Time")]
-        public int RelativeTime { get; set; }
+        public DateTime? RelativeTime { get; set; }
         [Name("Duration")]
-        public int Duration { get; set; }
+        public string? Duration { get; set; }
         [Name("Completion Time")]
-        public int CompletionTime { get; set; }
-    }
+        public DateTime? CompletionTime { get; set; }
 
-	public ProcessManage()
-	{
+        //Process Management
         [Name("User")]
-        public int UserName { get; set; }
+        public string? UserName { get; set; }
         [Name("Session")]
-        public int SessionID { get; set; }
+        public int? SessionID { get; set; }
         [Name("Authentication ID")]
-        public int AuthenticationID { get; set; }
+        public string? AuthenticationID { get; set; }
         [Name("Integrity")]
-        public int Integrity { get; set; }
+        public string? Integrity { get; set; }
         [Name("PID")]
-        public int ProcessID { get; set; }
+        public required int ProcessID { get; set; }
         [Name("TID")]
-        public int ThreadID { get; set; }
+        public int? ThreadID { get; set; }
         [Name("Parent PID")]
-        public int ParentPID { get; set; }
+        public required int ParentPID { get; set; }
         [Name("Virtualized")]
-        public int Virtualized { get; set; }
+        public string? Virtualized { get; set; }
 
     }
 }
