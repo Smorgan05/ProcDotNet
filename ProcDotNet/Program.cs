@@ -26,22 +26,22 @@ namespace ProcNet
 
             //Sort by number of processes
             Dictionary<string, List<ProcMon>> sortedProcessBuckets = ProcessBuckets.OrderByDescending(x => x.Value.Capacity).ToDictionary(x => x.Key, x => x.Value);
-
-            //Sort by Time of Day
             Dictionary<ProcMon, List<ProcMon>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
 
+            //Sort by Time of Day
             var timeOfDayBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.TimeOfDay).ToDictionary(x => x.Key, x => x.Value);
-            Test.DictionaryPrinter(timeOfDayBuckets);
+
+            // Linked List
+            var test = PrepList(timeOfDayBuckets);
+
+            //Test.DictionaryPrinter(timeOfDayBuckets);
 
             // Process Mapper Proper (Specific) explorer.exe -> Many
             List<ProcMon> ProcMaps = ProcessMapper(sortedProcessBuckets, parentProc);
-            var DictProcMaps = Processor.DictProcessMapper(sortedProcessBuckets, parentProc);
+            Dictionary<ProcMon, List<ProcMon>> DictProcMaps = Processor.DictProcessMapper(sortedProcessBuckets, parentProc);
 
             // Find Parent Procss from bucket brave.exe -> sub braves
             var temp = ParentChildMapper(sortedProcessBuckets, process);
-
-            // Linked List
-            var test = PrepList(sortedProcessBuckets);
 
             //Test Print Method
             Console.WriteLine("Unique Processes: " + sortedProcessBuckets.Count);
@@ -91,13 +91,13 @@ namespace ProcNet
         /// <param name="sortedProcessBuckets"></param>
         /// <param name="Process"></param>
         /// <returns></returns>
-        private static List<ProcMon> ProcessMapper(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string Process)
+        private static List<ProcMon> ProcessMapper(Dictionary<string, List<ProcMon>> processBuckets, string Process)
         {
-            ProcMon? parent = sortedProcessBuckets.First(x => x.Key.Equals(Process, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
+            ProcMon? parent = processBuckets.First(x => x.Key.Equals(Process, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
             List<ProcMon> result = new();
             if (parent != null)
             {
-                foreach (var item in sortedProcessBuckets.Values)
+                foreach (var item in processBuckets.Values)
                 {
                     foreach (var process in item)
                     {
@@ -112,20 +112,54 @@ namespace ProcNet
             return result;
         }
 
-        private static Dictionary<string, List<ProcMon>> PrepList(Dictionary<string, List<ProcMon>> processBuckets)
+        private static Dictionary<ProcMon, List<ProcMon>> ProcessMapperDict(Dictionary<ProcMon, List<ProcMon>> processBuckets, ProcMon Process)
+        {
+            ProcMon? parent = processBuckets.First(x => x.Key.ProcessName.Equals(Process.ProcessName, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
+            List<ProcMon> temp = new();
+            if (parent != null)
+            {
+                foreach (var item in processBuckets.Values)
+                {
+                    foreach (var process in item)
+                    {
+                        if (process.ParentPID == parent.ProcessID)
+                        {
+                            temp.Add(process);
+                        }
+                    }
+                }
+
+            }
+
+            // Return
+            Dictionary<ProcMon, List<ProcMon>> result = new();
+            if (parent != null)
+            {
+                // Cleanup
+                var check = temp.Contains(parent);
+                if (check == true)
+                {
+                    temp.Remove(parent);
+                }
+
+                result.Add(parent, temp);
+            }
+            return result;
+        }
+
+        private static Dictionary<string, List<ProcMon>> PrepList(Dictionary<ProcMon, List<ProcMon>> processBuckets)
         {
             Dictionary<string, List<ProcMon>> result = new();
             foreach (var proc in processBuckets.Keys)
             {
-                // Check for Children <parents, children<List>> for specific process
-                List<ProcMon> temp = ProcessMapper(processBuckets, proc);
-
-                if (temp.Capacity > 0)
+                // Check for Children <parent, children<List>> for specific process
+                Dictionary<ProcMon, List<ProcMon>> temp = ProcessMapperDict(processBuckets, proc);
+                if (temp.Values.Count > 0)
                 {
 
                 }
 
-                // Orphaned Process
+                // Has No Children
                 else
                 {
 
@@ -134,7 +168,6 @@ namespace ProcNet
             }
             return result;
         }
-
     }
 
 }
