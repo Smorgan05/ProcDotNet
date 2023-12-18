@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "5yJDgch5Kglizy2UiKo0TGm3EYTaB5H/mJ8SSjACaHwLDQB2aFcO9Lm4Bf4GF66NF8M4gXym42WlUAH4/BTTrw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Dark\\Documents\\GitHub\\ProcDotNet\\ProcDotNet\\ProcDotNet\\ProcDotNet.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Dark\\.nuget\\packages\\csvhelper\\30.0.1\\csvhelper.30.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

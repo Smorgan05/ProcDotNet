@@ -1,0 +1,17 @@
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\bin\Debug\net7.0\ProcDotNet.exe
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\bin\Debug\net7.0\ProcDotNet.deps.json
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\bin\Debug\net7.0\ProcDotNet.runtimeconfig.json
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\bin\Debug\net7.0\ProcDotNet.dll
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\bin\Debug\net7.0\ProcDotNet.pdb
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.AssemblyInfoInputs.cache
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.AssemblyInfo.cs
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.csproj.CoreCompileInputs.cache
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.dll
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\refint\ProcDotNet.dll
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.pdb
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.genruntimeconfig.cache
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ref\ProcDotNet.dll
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\bin\Debug\net7.0\CsvHelper.dll
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.csproj.AssemblyReference.cache
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.csproj.CopyComplete
