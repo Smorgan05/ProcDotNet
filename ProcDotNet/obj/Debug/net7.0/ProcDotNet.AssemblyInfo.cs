@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProcDotNet")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3d0fb2050d0077e202bf0a668e2b3e2335f05e8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5cd9194b284551ca222e3178c392ecd0d4ed392d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProcDotNet")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProcDotNet")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

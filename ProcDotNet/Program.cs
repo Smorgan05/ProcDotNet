@@ -27,16 +27,38 @@ namespace ProcNet
             using var csv = new CsvReader(procLog, CultureInfo.InvariantCulture);
             List<ProcMon> records = csv.GetRecords<ProcMon>().ToList();
 
+            // Time of Date Parsing Fix
+            //var timeFixed = Support.ParseTime(records[0]);
+            List<ProcMon> recordsTimeFix = Support.FixTime(records);
+            
+            Console.WriteLine(records[0].ProcessName + ": " + records[0].TimeOfDay);
+            Console.WriteLine(recordsTimeFix[0].ProcessName + ": " + recordsTimeFix[0].TimeOfDay);
+            //var timeCheck = DateTime.ParseExact("01–02–2019 22:00:00.111", "MM/dd/yyyy HH:mm:ss:fff", CultureInfo.InvariantCulture);
+            //Console.WriteLine(records[0].ProcessName + ": " + timeCheck);
+
+            //DateTime result;
+            //string dateString = "08/18/2015 06:30:15.0065428";
+            //string format = "MM/dd/yyyy HH:mm:ss.fffffff";
+            //try
+            //{
+            //    result = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
+            //    Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
+            //}
+            //catch (FormatException)
+            //{
+            //    Console.WriteLine("{0} is not in the correct format.", dateString);
+            //}
+
             //Get Types
             Console.WriteLine("Categorizing Event Classes");
-            PostProcess(records);
+            PostProcess(recordsTimeFix);
 
             //Get EventClass Lists
-            List<ProcMon> FileSystemEvents = records.Where(rec => rec.isFileSystem.Equals(true)).ToList();
-            List<ProcMon> NetworkEvents = records.Where(rec => rec.isNetwork.Equals(true)).ToList();
-            List<ProcMon> ProcessEvents = records.Where(rec => rec.isProcess.Equals(true)).ToList();
-            List<ProcMon> ProfileEvents = records.Where(rec => rec.isProfiling.Equals(true)).ToList();
-            List<ProcMon> RegistryEvents = records.Where(rec => rec.isRegistry.Equals(true)).ToList();
+            List<ProcMon> FileSystemEvents = recordsTimeFix.Where(rec => rec.isFileSystem.Equals(true)).ToList();
+            List<ProcMon> NetworkEvents = recordsTimeFix.Where(rec => rec.isNetwork.Equals(true)).ToList();
+            List<ProcMon> ProcessEvents = recordsTimeFix.Where(rec => rec.isProcess.Equals(true)).ToList();
+            List<ProcMon> ProfileEvents = recordsTimeFix.Where(rec => rec.isProfiling.Equals(true)).ToList();
+            List<ProcMon> RegistryEvents = recordsTimeFix.Where(rec => rec.isRegistry.Equals(true)).ToList();
 
             //Gather Process Buckets
             Console.WriteLine("Gathering Unique Processes");
@@ -47,7 +69,10 @@ namespace ProcNet
             Dictionary<string, List<ProcMon>> sortedProcessBuckets = ProcessBuckets.OrderByDescending(x => x.Value.Capacity).ToDictionary(x => x.Key, x => x.Value);
 
             //Sort by Time of Day <Next>
-            var timeSortedProcessBuckets = GetTimeSortProcess(ProcessBuckets);
+            var ProcessBucketGroups = GetProcessBucketGroups(ProcessBuckets);
+            var reorder = ProcessBucketGroups.OrderByDescending(x => x.Key.TimeOfDay).ToDictionary(x => x.Key, x => x.Value);
+
+            //Test.DictionaryPrinter(reorder);
 
             //Get Process Tree (Linked List)
             //var ParentProcesses = GetParentProcesses(sortedProcessBuckets);
@@ -68,7 +93,7 @@ namespace ProcNet
             //Test.Printer(childProcs);
         }
 
-        private static object GetTimeSortProcess(Dictionary<string, List<ProcMon>> processBuckets)
+        private static Dictionary<ProcMon, List<ProcMon>> GetProcessBucketGroups(Dictionary<string, List<ProcMon>> processBuckets)
         {
             Dictionary<ProcMon, List<ProcMon>> result = new Dictionary<ProcMon, List<ProcMon>>();
 

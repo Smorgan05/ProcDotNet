@@ -18,6 +18,14 @@ namespace ProcNet
             }
         }
 
+        internal static void DictionaryPrinter(Dictionary<ProcMon, List<ProcMon>> processDictionary)
+        {
+            foreach (var procMon in processDictionary)
+            {
+                Console.WriteLine(procMon.Key.ProcessName);
+            }
+        }
+
         internal static void Printer(List<ProcMon> linkedProc)
         {
             Console.WriteLine("Nested Process List:");

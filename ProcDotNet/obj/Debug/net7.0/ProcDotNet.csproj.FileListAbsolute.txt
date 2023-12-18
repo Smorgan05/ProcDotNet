@@ -32,3 +32,4 @@ C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\obj\Debug\net7.0\refint\Pro
 C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.pdb
 C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.genruntimeconfig.cache
 C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ref\ProcDotNet.dll
+C:\Users\Dark\Documents\GitHub\ProcDotNet\ProcDotNet\obj\Debug\net7.0\ProcDotNet.sourcelink.json

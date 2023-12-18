@@ -18,7 +18,8 @@ namespace ProcNet
         /// Nested Processes
         /// </summary>
         public bool hasChildren = false;
-
+        
+       
         /// <summary>
         /// RAW Processed Attributes
         /// </summary>
@@ -41,26 +42,37 @@ namespace ProcNet
         //Event Details
         [Name("Sequence")]
         public string? SequenceNumber { get; set; }
+
         [Name("Event Class")]
         public required string EventClass { get; set; }
+
         [Name("Operation")]
         public required string Operation { get; set; }
+
         [Name("Date & Time")]
         public required DateTime DateAndTime { get; set; }
+
         [Name("Time of Day")]
-        public string? Time { get; set; }
+        public required string TimeOfDay { get; set; }
+
         [Name("Category")]
         public string? Category { get; set; }
+
         [Name("Path")]
         public string? Path { get; set; }
+
         [Name("Detail")]
         public string? Detail { get; set; }
+
         [Name("Result")]
         public string? Result { get; set; }
+
         [Name("Relative Time")]
         public DateTime? RelativeTime { get; set; }
+
         [Name("Duration")]
         public string? Duration { get; set; }
+
         [Name("Completion Time")]
         public DateTime? CompletionTime { get; set; }
 
