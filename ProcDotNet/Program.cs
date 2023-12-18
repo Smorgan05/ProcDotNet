@@ -21,65 +21,21 @@ namespace ProcNet
             string process = "brave.exe";
             string testPath = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile.CSV";
 
-            // Raw Processing
-            Console.WriteLine("Processing CSV: " + testPath);
-            using var procLog = new StreamReader(testPath);
-            using var csv = new CsvReader(procLog, CultureInfo.InvariantCulture);
-            List<ProcMon> records = csv.GetRecords<ProcMon>().ToList();
-
-            // Time of Date Parsing Fix
-            //var timeFixed = Support.ParseTime(records[0]);
-            List<ProcMon> recordsTimeFix = Support.FixTime(records);
-            
-            Console.WriteLine(records[0].ProcessName + ": " + records[0].TimeOfDay);
-            Console.WriteLine(recordsTimeFix[0].ProcessName + ": " + recordsTimeFix[0].TimeOfDay);
-            //var timeCheck = DateTime.ParseExact("01–02–2019 22:00:00.111", "MM/dd/yyyy HH:mm:ss:fff", CultureInfo.InvariantCulture);
-            //Console.WriteLine(records[0].ProcessName + ": " + timeCheck);
-
-            //DateTime result;
-            //string dateString = "08/18/2015 06:30:15.0065428";
-            //string format = "MM/dd/yyyy HH:mm:ss.fffffff";
-            //try
-            //{
-            //    result = DateTime.ParseExact(dateString, format, CultureInfo.InvariantCulture);
-            //    Console.WriteLine("{0} converts to {1}.", dateString, result.ToString());
-            //}
-            //catch (FormatException)
-            //{
-            //    Console.WriteLine("{0} is not in the correct format.", dateString);
-            //}
-
-            //Get Types
-            Console.WriteLine("Categorizing Event Classes");
-            PostProcess(recordsTimeFix);
-
-            //Get EventClass Lists
-            List<ProcMon> FileSystemEvents = recordsTimeFix.Where(rec => rec.isFileSystem.Equals(true)).ToList();
-            List<ProcMon> NetworkEvents = recordsTimeFix.Where(rec => rec.isNetwork.Equals(true)).ToList();
-            List<ProcMon> ProcessEvents = recordsTimeFix.Where(rec => rec.isProcess.Equals(true)).ToList();
-            List<ProcMon> ProfileEvents = recordsTimeFix.Where(rec => rec.isProfiling.Equals(true)).ToList();
-            List<ProcMon> RegistryEvents = recordsTimeFix.Where(rec => rec.isRegistry.Equals(true)).ToList();
-
-            //Gather Process Buckets
-            Console.WriteLine("Gathering Unique Processes");
-            var UniqueProcs = ProfileEvents.Select(x => x.ProcessName).Distinct().ToList();
-            Dictionary<string, List<ProcMon>> ProcessBuckets = ProcessSorter(ProfileEvents, UniqueProcs);
+            // Load ProcMon CSV (with Fixed Times)
+            var ProcessBuckets = Processor.LoadCSV(testPath);
 
             //Sort by number of processes
             Dictionary<string, List<ProcMon>> sortedProcessBuckets = ProcessBuckets.OrderByDescending(x => x.Value.Capacity).ToDictionary(x => x.Key, x => x.Value);
 
-            //Sort by Time of Day <Next>
-            var ProcessBucketGroups = GetProcessBucketGroups(ProcessBuckets);
-            var reorder = ProcessBucketGroups.OrderByDescending(x => x.Key.TimeOfDay).ToDictionary(x => x.Key, x => x.Value);
+            //Sort by Time of Day
+            Dictionary<ProcMon, List<ProcMon>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
 
-            //Test.DictionaryPrinter(reorder);
-
-            //Get Process Tree (Linked List)
-            //var ParentProcesses = GetParentProcesses(sortedProcessBuckets);
+            var timeOfDayBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.TimeOfDay).ToDictionary(x => x.Key, x => x.Value);
+            Test.DictionaryPrinter(timeOfDayBuckets);
 
             // Process Mapper Proper (Specific) explorer.exe -> Many
-            //List<ProcMon> ProcMaps = ProcessMapper(sortedProcessBuckets, parentProc);
-            var DictProcMaps = DictProcessMapper(sortedProcessBuckets, parentProc);
+            List<ProcMon> ProcMaps = ProcessMapper(sortedProcessBuckets, parentProc);
+            var DictProcMaps = Processor.DictProcessMapper(sortedProcessBuckets, parentProc);
 
             // Find Parent Procss from bucket brave.exe -> sub braves
             var temp = ParentChildMapper(sortedProcessBuckets, process);
@@ -91,23 +47,6 @@ namespace ProcNet
             Console.WriteLine("Unique Processes: " + sortedProcessBuckets.Count);
             //Test.DictionaryPrinter(sortedProcessBuckets);
             //Test.Printer(childProcs);
-        }
-
-        private static Dictionary<ProcMon, List<ProcMon>> GetProcessBucketGroups(Dictionary<string, List<ProcMon>> processBuckets)
-        {
-            Dictionary<ProcMon, List<ProcMon>> result = new Dictionary<ProcMon, List<ProcMon>>();
-
-            // iterate through all Processes
-            foreach (var item in  processBuckets)
-            {
-                var temp = DictProcessMapper(processBuckets, item.Key);
-                foreach (var procMap in temp)
-                {
-                    result.Add(procMap.Key, procMap.Value);
-                }
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -173,43 +112,6 @@ namespace ProcNet
             return result;
         }
 
-        /// <summary>
-        /// Map Launch Process (Specific) to Child Processes
-        /// </summary>
-        /// <param name="sortedProcessBuckets"></param>
-        /// <param name="Process"></param>
-        /// <returns>
-        /// Dictionary Parent Process, Child Processes
-        /// </returns>
-        private static Dictionary<ProcMon, List<ProcMon>> DictProcessMapper(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string Process)
-        {
-            ProcMon? parent = sortedProcessBuckets.First(x => x.Key.Equals(Process, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
-            List<ProcMon> temp = new();
-            Dictionary<ProcMon, List<ProcMon>> result = new();
-            if (parent != null)
-            {
-                foreach (var item in sortedProcessBuckets.Values)
-                {
-                    foreach (var process in item)
-                    {
-                        if (process.ParentPID == parent.ProcessID)
-                        {
-                            temp.Add(process);
-                        }
-                    }
-                }
-
-            }
-
-            // Null Check then Return
-            if (parent != null)
-            {
-                result.Add(parent, temp);
-            }
-
-            return result;
-        }
-
         private static Dictionary<string, List<ProcMon>> PrepList(Dictionary<string, List<ProcMon>> processBuckets)
         {
             Dictionary<string, List<ProcMon>> result = new();
@@ -233,48 +135,6 @@ namespace ProcNet
             return result;
         }
 
-        private static Dictionary<string, List<ProcMon>> ProcessSorter(List<ProcMon> records, List<string> uniqueProcs)
-        {
-            Dictionary<string, List<ProcMon>> result = new();
-            foreach (var proc in uniqueProcs)
-            {
-                // List of Duplicates
-                List<ProcMon> temp = records.FindAll(x => x.ProcessName.Equals(proc, StringComparison.OrdinalIgnoreCase)).ToList();
-                
-                // List of Unique Process IDs
-                List<int> uniqueIDs = temp.Select(a => a.ProcessID).Distinct().ToList();
-                List<ProcMon> uniqueTemp = new();
-
-                // Filter by Process IDs
-                foreach (int ID in uniqueIDs)
-                {
-                    var singleProcess = temp.FirstOrDefault(x => x.ProcessID == ID);
-                    if (singleProcess != null)
-                    {
-                        uniqueTemp.Add(singleProcess);
-                    }
-                }
-                result.Add(proc, uniqueTemp);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Set Event Types
-        /// </summary>
-        /// <param name="records"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private static void PostProcess(List<ProcMon> records)
-        {
-            foreach (ProcMon record in records)
-            {
-                record.isFileSystem = Support.FileSystemCheck(record);
-                record.isNetwork = Support.NetworkCheck(record);
-                record.isProcess = Support.ProcessCheck(record);
-                record.isProfiling = Support.ProfileCheck(record);
-                record.isRegistry = Support.RegistryCheck(record);
-            }
-        }
     }
 
 }

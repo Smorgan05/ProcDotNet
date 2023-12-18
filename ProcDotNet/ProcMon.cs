@@ -37,7 +37,7 @@ namespace ProcNet
         [Name("Version")]
         public string? Version { get; set; }
         [Name("Architecture")]
-        public required string Architecture { get; set; }
+        public string? Architecture { get; set; }
 
         //Event Details
         [Name("Sequence")]
