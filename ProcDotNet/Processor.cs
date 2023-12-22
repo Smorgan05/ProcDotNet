@@ -2,6 +2,7 @@
 
 
 using CsvHelper;
+using System.Diagnostics;
 using System.Globalization;
 
 namespace ProcNet
@@ -32,7 +33,7 @@ namespace ProcNet
 
             //Gather Process Buckets
             Console.WriteLine("Gathering Unique Processes");
-            var UniqueProcs = ProfileEvents.Select(x => x.ProcessName).Distinct().ToList();
+            List<string> UniqueProcs = ProfileEvents.Select(x => x.ProcessName).ToList();
             Dictionary<string, List<ProcMon>> ProcessBuckets = ProcessSorter(ProfileEvents, UniqueProcs);
             return ProcessBuckets;
         }
@@ -44,7 +45,7 @@ namespace ProcNet
             // iterate through all Processes 
             foreach (var item in processBuckets)
             {
-                var temp = DictProcessMapper(processBuckets, item.Key);
+                Dictionary<ProcMon, List<ProcMon>> temp = DictProcessMapperNew(processBuckets, item.Key);
                 foreach (var procMap in temp)
                 {
                     result.Add(procMap.Key, procMap.Value);
@@ -52,6 +53,18 @@ namespace ProcNet
             }
 
             return result;
+        }
+
+        private static Dictionary<ProcMon, List<ProcMon>> DictProcessMapperNew(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string key)
+        {
+            List<ProcMon> temp = new();
+            Dictionary<ProcMon, List<ProcMon>> result = new();
+
+            ProcMon? parent = sortedProcessBuckets.First(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
+
+
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -64,9 +77,10 @@ namespace ProcNet
         /// </returns>
         internal static Dictionary<ProcMon, List<ProcMon>> DictProcessMapper(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string Process)
         {
-            ProcMon? parent = sortedProcessBuckets.First(x => x.Key.Equals(Process, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
             List<ProcMon> temp = new();
             Dictionary<ProcMon, List<ProcMon>> result = new();
+
+            ProcMon? parent = sortedProcessBuckets.First(x => x.Key.Equals(Process, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
             if (parent != null)
             {
                 foreach (var item in sortedProcessBuckets.Values)
@@ -93,27 +107,33 @@ namespace ProcNet
 
         private static Dictionary<string, List<ProcMon>> ProcessSorter(List<ProcMon> records, List<string> uniqueProcs)
         {
+            Dictionary<string, List<ProcMon>> tempRes = new();
             Dictionary<string, List<ProcMon>> result = new();
             foreach (var proc in uniqueProcs)
             {
                 // List of Duplicates
                 List<ProcMon> temp = records.FindAll(x => x.ProcessName.Equals(proc, StringComparison.OrdinalIgnoreCase)).ToList();
-
-                // List of Unique Process IDs
-                List<int> uniqueIDs = temp.Select(a => a.ProcessID).Distinct().ToList();
-                List<ProcMon> uniqueTemp = new();
-
-                // Filter by Process IDs
-                foreach (int ID in uniqueIDs)
+                var check = temp.DistinctBy(x => x.ProcessID).ToList();
+                
+                if (tempRes.ContainsKey(proc))
                 {
-                    var singleProcess = temp.FirstOrDefault(x => x.ProcessID == ID);
-                    if (singleProcess != null)
-                    {
-                        uniqueTemp.Add(singleProcess);
-                    }
+                    tempRes[proc].AddRange(check);
                 }
-                result.Add(proc, uniqueTemp);
+                else
+                {
+                    tempRes.Add(proc, check);
+                }
             }
+
+            //var test = tempRes["msedgewebview2.exe"].DistinctBy(x => x.ProcessID).ToList();
+
+            foreach (var item in tempRes)
+            {
+                var list = item.Value.DistinctBy(x => x.ProcessID).ToList();
+                result.Add(item.Key, list);
+            }
+
+            // Filter Result
             return result;
         }
 
