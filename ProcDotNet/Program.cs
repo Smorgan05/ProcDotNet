@@ -34,91 +34,45 @@ namespace ProcNet
             // Map Disparate Processes
             List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = Processor.GetInterProcMapping(ProcessBucketGroups);
 
-            var tester = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
+            //var tester = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
 
             //var timeOfDayBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.TimeOfDay).ToDictionary(x => x.Key, x => x.Value);
             //var ProcessIDBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.ProcessID).ToDictionary(x => x.Key, x => x.Value);
 
             // Linked Tree Nodes List
-            //List<TreeNode<ProcMon>> ProcessNodes = GetTreeList(ProcessIDBuckets);
+            List<TreeNode<ProcMon>> ProcessNodes = GetTreeList(ProcMaps);
+
+            TreeNode<ProcMon> one = ProcessNodes[5];
+            TreeNode<ProcMon> temp = one.FindTreeNode(node => node.Data != null && node.Data.ProcessID == 5064);
 
             // Inter Node Mapping
-            //List<TreeNode<ProcMon>> LinkedProcessNodes = GetLinkedNodes(ProcessNodes);
+            List<TreeNode<ProcMon>> LinkedProcessNodes = MakeTreeListNew(ProcessNodes);
 
             //Sort by number of processes
             //Dictionary<string, List<ProcMon>> sortedProcessBuckets = ProcessBuckets.OrderByDescending(x => x.Value.Capacity).ToDictionary(x => x.Key, x => x.Value);
 
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
-            // Process Mapper Proper (Specific) explorer.exe -> Many
-            //List<ProcMon> ProcMaps = ProcessMapper(sortedProcessBuckets, parentProc);
-            //Dictionary<ProcMon, List<ProcMon>> DictProcMaps = Processor.DictProcessMapper(sortedProcessBuckets, parentProc);
-
-            // Find Parent Procss from bucket brave.exe -> sub braves
-            //var temp = ParentChildMapper(sortedProcessBuckets, process);
-
             //Test Print Method
             //Console.WriteLine("Unique Processes: " + sortedProcessBuckets.Count);
+            //Test.NodeListPrinter(ProcessNodes);
+            //Test.NodePrinter(one);
+            //Test.NodePrinter(temp);
             //Test.BucketPrinter(ProcessBuckets);
             //Test.DictionaryPrinter(ProcessBucketGroups);
-            Test.KeyValuePrinter(tester);
+            //Test.KeyValuePrinter(ProcMaps);
             //Test.Printer(childProcs);
         }
 
-        private static List<TreeNode<ProcMon>> GetLinkedNodes(List<TreeNode<ProcMon>> processNodesList)
-        {
-            List<TreeNode<ProcMon>> result = new List<TreeNode<ProcMon>>();
-            //List<TreeNode<ProcMon>> temp = new List<TreeNode<ProcMon>>(processNodesList);
-
-            IEnumerable<TreeNode<ProcMon>> testParent = processNodesList.Where(x => x.Data.ProcessID == 20084);
-            IEnumerable<TreeNode<ProcMon>> testChildren = processNodesList.Where(x => x.Data.ParentPID == 20084);
-            //Console.WriteLine(testParent.First().Data.ProcessName);
-
-            // Linker
-            foreach (var item in processNodesList)
-            {
-                Console.WriteLine();
-                Console.WriteLine(item.Data.ProcessName + ": children : " + item.Children.Count);
-                foreach (var child in item.Children)
-                {
-                    Console.WriteLine(child.Data.ProcessName + " " + child.Data.ProcessID);
-                }
-
-
-                //// Current process
-                //int Parent = item.Data.ProcessID;
-                //var currentNode = item;
-
-                //// Find Child from other Nodes
-                //List<TreeNode<ProcMon>> temp = processNodesList.Where(x => x.Data.ParentPID == Parent).ToList();
-
-                //if (temp.Count > 0)
-                //{
-                //    //var child = temp.First().Data;
-                //    Console.WriteLine();
-                //    Console.WriteLine(item.Data.ProcessName + " " + item.Data.ProcessID + " " + item.Data.ParentPID);
-                //    Console.WriteLine("Children count: " + item.Children.Count);
-                //    //Console.WriteLine(child.ProcessName + ": " + child.ProcessID + " " + child.ParentPID);
-
-                //    foreach (var node in temp)
-                //    {
-                //        Console.WriteLine(node.Data.ProcessName);
-                //    }
-                //}
-
-                //Console.WriteLine(temp.Count);
-            }
-
-
-
-
-            return result;
-        }
-
-        private static List<TreeNode<ProcMon>> GetTreeList(Dictionary<ProcMon, List<ProcMon>> processBuckets)
+        /// <summary>
+        /// Perform Layer 1 Node Mapping
+        /// </summary>
+        /// <param name="processBuckets"></param>
+        /// <returns></returns>
+        private static List<TreeNode<ProcMon>> GetTreeList(List<KeyValuePair<ProcMon, List<ProcMon>>> processBuckets)
         {
             //Setup and Pass
-            Dictionary<ProcMon, List<ProcMon>> orgBuckets = new Dictionary<ProcMon, List<ProcMon>>(processBuckets);
+            List<KeyValuePair<ProcMon, List<ProcMon>>> orgBuckets = new(processBuckets);
 
             // Make Return Result
             List<TreeNode<ProcMon>> TreeListRes = new List<TreeNode<ProcMon>>();
@@ -132,48 +86,33 @@ namespace ProcNet
                 // Add Children
                 foreach (var child in process.Value)
                 {
-                    singleRoot.AddChild(child);
+                    if (process.Key != child)
+                    {
+                        singleRoot.AddChild(child);
+                    }
                 }
-
                 TreeListRes.Add(singleRoot);
             }
 
             return TreeListRes;
         }
 
-
-        private static List<TreeNode<ProcMon>> MakeTreeListBroken(Dictionary<ProcMon, List<ProcMon>> processBuckets)
+        private static List<TreeNode<ProcMon>> MakeTreeListNew(List<TreeNode<ProcMon>> processNodes)
         {
-            //Setup and Pass
-            Dictionary<ProcMon, List<ProcMon>> orgBuckets = new Dictionary<ProcMon, List<ProcMon>>(processBuckets);
-            ProcMon Root = orgBuckets.Keys.First();
+            List<TreeNode<ProcMon>> result = new();
 
             // Make Return Result
-            List<TreeNode<ProcMon>> TreeListRes = TreeMaker(new List<TreeNode<ProcMon>>(), orgBuckets);
+            result = TreeMaker(new List<TreeNode<ProcMon>>(), processNodes);
 
-            // Recurse Funky Town
-            static List<TreeNode<ProcMon>> TreeMaker(List<TreeNode<ProcMon>> TreeList, Dictionary<ProcMon, List<ProcMon>> currentBuckets)
+            static List<TreeNode<ProcMon>> TreeMaker(List<TreeNode<ProcMon>> TreeList, List<TreeNode<ProcMon>> Nodes)
             {
-                //Prep
-                ProcMon current = currentBuckets.Keys.First();
-                TreeNode<ProcMon> SingleTree = new TreeNode<ProcMon>(current);
+                // Prep
                 List<TreeNode<ProcMon>> TreeListTemp = new(TreeList);
+                TreeNode<ProcMon> currentRoot = Nodes.First();
+                TreeListTemp.Add(currentRoot);
 
-                //Mapping (Layer 1 Parent)
-                Dictionary<ProcMon, List<ProcMon>> temp = ProcessMapperDict(currentBuckets, current);
-                
-                // Mapping (Layer 1 Children)
-                List<ProcMon> tempList = temp.First().Value;
-                foreach (ProcMon item in tempList)
-                {
-                    SingleTree.AddChild(item);
-                }
-
-                // Add to TreeList
-                TreeListTemp.Add(SingleTree);
-
-                // Perform InterMap Check between Parent tree and (Child node of another Parent tree)
-                var InterMapCheck = GetMapInterCheck(TreeListTemp, SingleTree);
+                // Check for Parent (ProcessID) => Child (ParentID) - Continue Here!!!
+                var InterMapCheck = GetMapInterCheck(TreeListTemp, currentRoot);
                 if (TreeListTemp.Count > 0 && InterMapCheck == true)
                 {
                     // Adjust TreeList Temp
@@ -181,34 +120,31 @@ namespace ProcNet
                 }
 
                 // Pop Current Index From Buckets
-                currentBuckets.Remove(current);
+                Nodes.Remove(currentRoot);
 
                 // Check and Recurse
-                if (currentBuckets.Count > 0 )
+                if (Nodes.Count > 0)
                 {
                     // Continue if Buckets are not Empty
-                    TreeListTemp = TreeMaker(TreeListTemp, currentBuckets);
+                    TreeListTemp = TreeMaker(TreeListTemp, Nodes);
                 }
                 return TreeListTemp;
             }
 
-            return TreeListRes;
+            return result;
         }
 
         private static bool GetMapInterCheck(List<TreeNode<ProcMon>> treeList, TreeNode<ProcMon> singleTree)
         {
             // Pull Root of Single Tree (to map to child)
             int singleRoot = singleTree.Data.ParentPID;
-
-            // Modify to Skip SignleTree from NodeList
             List<TreeNode<ProcMon>> tempTreeList = new List<TreeNode<ProcMon>>(treeList);
-            tempTreeList.Remove(singleTree);
 
             // Iterate through Tree List
             foreach (TreeNode<ProcMon> item in tempTreeList)
             {
                 // Find Process ID (Branch => Child of Branch) (Broken)
-                TreeNode<ProcMon>? found = FindChildNode(item, singleRoot);
+                TreeNode<ProcMon>? found = item.FindTreeNode(node => node.Data.ProcessID == singleRoot);
                 if (found != null)
                 {
                     Console.WriteLine("found one");
@@ -225,7 +161,7 @@ namespace ProcNet
 
         private static TreeNode<ProcMon>? FindChildNode(TreeNode<ProcMon> Node, int singleRoot)
         {
-            TreeNode<ProcMon> result = null;
+            TreeNode<ProcMon>? result = null;
             var childNode = Node.Children;
             
             // Child Node Count Check
@@ -235,7 +171,7 @@ namespace ProcNet
             }
 
             //First Layer (get childNode Match)
-            TreeNode<ProcMon>? selectNode = childNode.Where(a => a.Data.ProcessID == singleRoot).FirstOrDefault();
+            TreeNode<ProcMon> selectNode = childNode.Where(a => a.Data.ProcessID == singleRoot).First();
             //var select = test.Select(a => )
             if (selectNode != null)
             {

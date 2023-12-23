@@ -1,6 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
+using ProcDotNet.Tree;
+using System.Diagnostics;
+
 namespace ProcNet
 {
     internal class Test
@@ -54,6 +57,30 @@ namespace ProcNet
                     Console.WriteLine(item.ProcessName + " Parent ID: " + item.ParentPID + ": Process ID: " + item.ProcessID);
                 }
 
+            }
+        }
+
+        internal static void NodeListPrinter(List<TreeNode<ProcMon>> processNodes)
+        {
+            foreach (var process in processNodes)
+            {
+                Console.WriteLine();
+                Console.WriteLine(process.Data.ProcessName + " Parent ID: " + process.Data.ParentPID + ": Process ID: " + process.Data.ProcessID);
+                foreach (var item in process.Children)
+                {
+                    Console.WriteLine(item.Data.ProcessName + " Parent ID: " + item.Data.ParentPID + ": Process ID: " + item.Data.ProcessID);
+                }
+            }
+            //Console.WriteLine();
+        }
+
+        internal static void NodePrinter(TreeNode<ProcMon> one)
+        {
+            Console.WriteLine();
+            Console.WriteLine(one.Data.ProcessName + " Parent ID: " + one.Data.ParentPID + ": Process ID: " + one.Data.ProcessID);
+            foreach (var item in one.Children)
+            {
+                Console.WriteLine(item.Data.ProcessName + " Parent ID: " + item.Data.ParentPID + ": Process ID: " + item.Data.ProcessID);
             }
         }
 
