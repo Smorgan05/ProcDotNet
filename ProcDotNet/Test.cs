@@ -35,11 +35,25 @@ namespace ProcNet
             foreach (var procMon in processDictionary)
             {
                 Console.WriteLine();
-                Console.WriteLine(procMon.Key.ProcessName + ": " + procMon.Key.ParentPID + ": " + procMon.Key.ProcessID);
+                Console.WriteLine("Parent: " + procMon.Key.ProcessName + ": " + procMon.Key.ParentPID + ": " + procMon.Key.ProcessID);
                 foreach (var process in procMon.Value)
                 {
                     Console.WriteLine(process.ProcessName + ": " + process.ParentPID + ": " + process.ProcessID);
                 }
+            }
+        }
+
+        internal static void KeyValuePrinter(List<KeyValuePair<ProcMon, List<ProcMon>>> processBucketGroups)
+        {
+            foreach(var process in processBucketGroups)
+            {
+                Console.WriteLine();
+                Console.WriteLine(process.Key.ProcessName + " Parent ID: " + process.Key.ParentPID + ": Process ID: " + process.Key.ProcessID);
+                foreach (var item in process.Value)
+                {
+                    Console.WriteLine(item.ProcessName + " Parent ID: " + item.ParentPID + ": Process ID: " + item.ProcessID);
+                }
+
             }
         }
 

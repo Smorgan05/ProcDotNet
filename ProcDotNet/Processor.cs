@@ -2,8 +2,10 @@
 
 
 using CsvHelper;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 namespace ProcNet
 {
@@ -38,33 +40,54 @@ namespace ProcNet
             return ProcessBuckets;
         }
 
-        internal static Dictionary<ProcMon, List<ProcMon>> GetProcessBucketGroups(Dictionary<string, List<ProcMon>> processBuckets)
+        internal static List<KeyValuePair<ProcMon, List<ProcMon>>> GetProcessBucketGroups(Dictionary<string, List<ProcMon>> processBuckets)
         {
-            Dictionary<ProcMon, List<ProcMon>> result = new Dictionary<ProcMon, List<ProcMon>>();
+            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
 
             // iterate through all Processes 
             foreach (var item in processBuckets)
             {
-                Dictionary<ProcMon, List<ProcMon>> temp = DictProcessMapperNew(processBuckets, item.Key);
+                List<KeyValuePair<ProcMon, List<ProcMon>>> temp = DictProcessMapper(processBuckets, item.Key);
                 foreach (var procMap in temp)
                 {
-                    result.Add(procMap.Key, procMap.Value);
+                    result.Add(procMap);
                 }
             }
 
             return result;
         }
 
-        private static Dictionary<ProcMon, List<ProcMon>> DictProcessMapperNew(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string key)
+        internal static List<KeyValuePair<ProcMon, List<ProcMon>>> GetInterProcMapping(List<KeyValuePair<ProcMon, List<ProcMon>>> processBucketGroups)
         {
-            List<ProcMon> temp = new();
-            Dictionary<ProcMon, List<ProcMon>> result = new();
 
-            ProcMon? parent = sortedProcessBuckets.First(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
+            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
 
+            // Conversions
+            List<KeyValuePair<ProcMon, List<ProcMon>>> singlesKeyVal = processBucketGroups.Where(x => x.Value.Count == 0).ToList();
+            List<ProcMon> singlesList = singlesKeyVal.ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
 
+            // Parent
+            foreach (var item in singlesList)
+            {
+                List<ProcMon> select = singlesList.Where(x => x.ParentPID == item.ProcessID).DistinctBy(x => x.ProcessID).ToList();
+                var element = new KeyValuePair<ProcMon, List<ProcMon>>(item, select);
+                if (!result.Contains(element))
+                {
+                    result.Add(element);
+                }
 
-            throw new NotImplementedException();
+            }
+
+            // Sloppy Merge
+            var groups = result.Where(x => x.Value.Count > 0).ToList();
+            var singles = result.Where(x => x.Value.Count == 0).ToList();
+            var Merge = Processor.GetMerge(groups, singles);
+
+            // Merge with Groups
+            result = processBucketGroups.Where(x => x.Value.Count != 0).ToList();
+            result.AddRange(Merge);
+
+            return result;
         }
 
         /// <summary>
@@ -75,31 +98,65 @@ namespace ProcNet
         /// <returns>
         /// Dictionary Parent Process, Child Processes
         /// </returns>
-        internal static Dictionary<ProcMon, List<ProcMon>> DictProcessMapper(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string Process)
+        internal static List<KeyValuePair<ProcMon, List<ProcMon>>> DictProcessMapper(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string Process)
         {
-            List<ProcMon> temp = new();
-            Dictionary<ProcMon, List<ProcMon>> result = new();
+            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
+            List<ProcMon> tempRes = new List<ProcMon>();
 
-            ProcMon? parent = sortedProcessBuckets.First(x => x.Key.Equals(Process, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
-            if (parent != null)
+            var processes = sortedProcessBuckets.First(x => x.Key.Equals(Process)).Value;
+            List<ProcMon> parents = processes.DistinctBy(x => x.ProcessID).ToList();
+
+            foreach (var par in parents)
             {
-                foreach (var item in sortedProcessBuckets.Values)
+                tempRes = Childfinder(processes, par);
+
+                //Console.WriteLine(par.ProcessName + " " + par.ProcessID + " " + par.ParentPID);
+                var element = new KeyValuePair<ProcMon, List<ProcMon>>(par, tempRes);
+                result.Add(element);
+            }
+
+            // Sloppy Merge
+            var groups = result.Where(x => x.Value.Count > 0).ToList();
+            var singles = result.Where(x => x.Value.Count == 0).ToList();
+            var Merge = GetMerge(groups, singles);
+
+            return Merge;
+        }
+
+        internal static List<KeyValuePair<ProcMon, List<ProcMon>>> GetMerge(List<KeyValuePair<ProcMon, List<ProcMon>>> groups, List<KeyValuePair<ProcMon, List<ProcMon>>> singles)
+        {
+            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new(groups);
+            List<KeyValuePair<ProcMon, List<ProcMon>>> newSingles = new(singles);
+
+            // Single Group
+            foreach (var proc in groups)
+            {
+                // Check
+                List<ProcMon> temp = proc.Value;
+                foreach (var single in singles)
                 {
-                    foreach (var process in item)
+                    // Check single for Match (remove)
+                    if (temp.Contains(single.Key))
                     {
-                        if (process.ParentPID == parent.ProcessID)
-                        {
-                            temp.Add(process);
-                        }
+                        newSingles.Remove(single);
                     }
                 }
 
             }
 
-            // Null Check then Return
-            if (parent != null)
+            result.AddRange(newSingles);
+            return result;
+        }
+
+        private static List<ProcMon> Childfinder(List<ProcMon> processes, ProcMon par)
+        {
+            var result = new List<ProcMon>();
+            foreach (var item in processes)
             {
-                result.Add(parent, temp);
+                if (par.ProcessID == item.ParentPID)
+                {
+                    result.Add(item);
+                }
             }
 
             return result;

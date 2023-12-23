@@ -28,11 +28,16 @@ namespace ProcNet
             // Load ProcMon CSV (with Fixed Times)
             var ProcessBuckets = Processor.LoadCSV(testPath);
 
-            //Sort by Time of Day (broken)
-            Dictionary<ProcMon, List<ProcMon>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
+            //Get Process Buckets (with dup indexes)
+            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
+
+            // Map Disparate Processes
+            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = Processor.GetInterProcMapping(ProcessBucketGroups);
+
+            var tester = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
 
             //var timeOfDayBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.TimeOfDay).ToDictionary(x => x.Key, x => x.Value);
-            //var ProcessIDBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.ParentPID).ToDictionary(x => x.Key, x => x.Value);
+            //var ProcessIDBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.ProcessID).ToDictionary(x => x.Key, x => x.Value);
 
             // Linked Tree Nodes List
             //List<TreeNode<ProcMon>> ProcessNodes = GetTreeList(ProcessIDBuckets);
@@ -54,8 +59,9 @@ namespace ProcNet
 
             //Test Print Method
             //Console.WriteLine("Unique Processes: " + sortedProcessBuckets.Count);
-            Test.BucketPrinter(ProcessBuckets);
-            //Test.DictionaryPrinter(ProcessIDBuckets);
+            //Test.BucketPrinter(ProcessBuckets);
+            //Test.DictionaryPrinter(ProcessBucketGroups);
+            Test.KeyValuePrinter(tester);
             //Test.Printer(childProcs);
         }
 
@@ -136,108 +142,6 @@ namespace ProcNet
         }
 
 
-
-        /// <summary>
-        /// Get Process Mapping for Bucket Group <Brave.exe>
-        /// (Specific) brave.exe -> sub braves
-        /// </summary>
-        /// <param name="sortedProcessBuckets"></param>
-        /// <param name="subProcess"></param>
-        /// <returns></returns>
-        private static Dictionary<ProcMon, List<ProcMon>> ParentChildMapper(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string subProcess)
-        {
-            // Get specific Processes
-            List<ProcMon> testFilter = sortedProcessBuckets.First(x => x.Key.Equals(subProcess, StringComparison.OrdinalIgnoreCase)).Value;
-            Dictionary<ProcMon, List<ProcMon>> result = new Dictionary<ProcMon, List<ProcMon>>();
-
-            // Get Parents
-            foreach (ProcMon currProc in testFilter)
-            {
-                //Console.WriteLine(currProc.ParentPID + " " + currProc.ProcessID);
-                var temp = testFilter.Where(x => x.ProcessID == currProc.ParentPID).ToList();       
-                if (temp.Count > 0)
-                {
-                    // Map Parents to Children
-                    var parent = temp.First();
-                    var proclist = new List<ProcMon>();
-                    foreach(var item in temp)
-                    {
-                        proclist = testFilter.Where(x => x.ParentPID == item.ProcessID).ToList();
-                    }
-
-                    result.TryAdd(parent, proclist);
-                }
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Map Launch Process (specific) to Child Processes
-        /// (Specific) explorer.exe -> Many
-        /// </summary>
-        /// <param name="sortedProcessBuckets"></param>
-        /// <param name="Process"></param>
-        /// <returns></returns>
-        private static List<ProcMon> ProcessMapper(Dictionary<string, List<ProcMon>> processBuckets, string Process)
-        {
-            ProcMon? parent = processBuckets.First(x => x.Key.Equals(Process, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
-            List<ProcMon> result = new();
-            if (parent != null)
-            {
-                foreach (var item in processBuckets.Values)
-                {
-                    foreach (var process in item)
-                    {
-                        if (process.ParentPID == parent.ProcessID)
-                        {
-                            result.Add(process);
-                        }
-                    }
-                }
-
-            }
-            return result;
-        }
-
-        private static Dictionary<ProcMon, List<ProcMon>> ProcessMapperDict(Dictionary<ProcMon, List<ProcMon>> processBuckets, ProcMon Process)
-        {
-            //Console.WriteLine(Process.ProcessName + ": Parent ID: " + Process.ParentPID + " Process ID: " + Process.ProcessID);
-            ProcMon? parent = processBuckets.First(x => x.Key.ProcessName.Equals(Process.ProcessName, StringComparison.OrdinalIgnoreCase)).Value.FirstOrDefault();
-            List<ProcMon> temp = new();
-            if (parent != null)
-            {   
-                foreach (List<ProcMon> item in processBuckets.Values)
-                { 
-                    foreach (var process in item)
-                    {
-                        if (process.ProcessID == parent.ParentPID)
-                        {
-                            Console.WriteLine(process.ProcessName + ": Parent ID: " + process.ParentPID + " Process ID: " + process.ProcessID);
-
-                            temp.Add(process);
-                        }
-                    }
-                }
-
-            }
-
-            // Return
-            Dictionary<ProcMon, List<ProcMon>> result = new();
-            if (parent != null)
-            {
-                // Cleanup
-                var check = temp.Contains(parent);
-                if (check == true)
-                {
-                    temp.Remove(parent);
-                }
-
-                result.Add(parent, temp);
-            }
-            return result;
-        }
-
         private static List<TreeNode<ProcMon>> MakeTreeListBroken(Dictionary<ProcMon, List<ProcMon>> processBuckets)
         {
             //Setup and Pass
@@ -289,11 +193,6 @@ namespace ProcNet
             }
 
             return TreeListRes;
-        }
-
-        private static List<TreeNode<ProcMon>> ExecInterMap(List<TreeNode<ProcMon>> treeList)
-        {
-            throw new NotImplementedException();
         }
 
         private static bool GetMapInterCheck(List<TreeNode<ProcMon>> treeList, TreeNode<ProcMon> singleTree)
