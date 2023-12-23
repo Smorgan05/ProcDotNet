@@ -51,6 +51,7 @@ namespace ProcDotNet.Tree
             Children.Add(childNode);
 
             RegisterChildForSearch(childNode);
+
             return childNode;
         }
 
@@ -67,7 +68,8 @@ namespace ProcDotNet.Tree
         private void RegisterChildForSearch(TreeNode<T> node)
         {
             ElementsIndex.Add(node);
-            Parent.RegisterChildForSearch(node);
+            if (Parent != null)
+                Parent.RegisterChildForSearch(node);
         }
 
         public TreeNode<T> FindTreeNode(Func<TreeNode<T>, bool> predicate)

@@ -40,6 +40,9 @@ namespace ProcNet
             // Linked Tree Nodes List
             List<TreeNode<ProcMon>> ProcessNodes = GetTreeList(ProcMaps);
 
+            // Check for match
+            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMapsCheck = ConvertToKVP(ProcessNodes);
+
             // Inter Node Mapping
             //List<TreeNode<ProcMon>> LinkedProcessNodes = MakeTreeListNew(ProcessNodes);
 
@@ -48,18 +51,35 @@ namespace ProcNet
             //var timeOfDay = ProcMaps.OrderBy(x => x.Key.TimeOfDay).ToList();
 
             TreeNode<ProcMon> one = ProcessNodes[5];
-            TreeNode<ProcMon>? temp = one.FindTreeNode(node => node.Data != null && node.Data.ProcessID == 5064);
+            TreeNode<ProcMon> temp = one.FindTreeNode(node => node.Data != null && node.Data.ProcessID == 5064);
 
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
             //Test.NodeListPrinter(ProcessNodes);
-            Test.NodePrinter(one);
-            Test.NodePrinter(temp);
+            //Test.NodePrinter(one);
+            //Test.NodePrinter(temp);
             //Test.BucketPrinter(ProcessBuckets);
             //Test.DictionaryPrinter(ProcessBucketGroups);
             //Test.KeyValuePrinter(ProcMaps);
             //Test.Printer(childProcs);
+        }
+
+        private static List<KeyValuePair<ProcMon, List<ProcMon>>> ConvertToKVP(List<TreeNode<ProcMon>> processNodes)
+        {
+            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
+            foreach (var item in processNodes)
+            {
+                List<ProcMon> list = new List<ProcMon>();
+                foreach (var child in item.Children)
+                {
+                    list.Add(child.Data);
+                }
+                var element = new KeyValuePair<ProcMon, List<ProcMon>>(item.Data, list);
+                result.Add(element);
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -118,14 +138,14 @@ namespace ProcNet
                 }
 
                 // Pop Current Index From Buckets
-                Nodes.Remove(currentRoot);
+                //Nodes.Remove(currentRoot);
 
-                // Check and Recurse
-                if (Nodes.Count > 0)
-                {
-                    // Continue if Buckets are not Empty
-                    TreeListTemp = TreeMaker(TreeListTemp, Nodes);
-                }
+                //// Check and Recurse
+                //if (Nodes.Count > 0)
+                //{
+                //    // Continue if Buckets are not Empty
+                //    TreeListTemp = TreeMaker(TreeListTemp, Nodes);
+                //}
                 return TreeListTemp;
             }
 
