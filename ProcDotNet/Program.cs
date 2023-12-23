@@ -25,6 +25,9 @@ namespace ProcNet
             // Tree Testing
             //ProcDotNet.Tree.SampleIterating.MainTest();
 
+            //TreeNode<string> treeRoot = SampleData.GetSet1();
+            //TreeNode<string> found = treeRoot.FindTreeNode(node => node.Data != null && node.Data.Contains("210"));
+
             // Load ProcMon CSV (with Fixed Times)
             var ProcessBuckets = Processor.LoadCSV(testPath);
 
@@ -34,27 +37,22 @@ namespace ProcNet
             // Map Disparate Processes
             List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = Processor.GetInterProcMapping(ProcessBucketGroups);
 
-            //var tester = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
-
-            //var timeOfDayBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.TimeOfDay).ToDictionary(x => x.Key, x => x.Value);
-            //var ProcessIDBuckets = ProcessBucketGroups.OrderByDescending(x => x.Key.ProcessID).ToDictionary(x => x.Key, x => x.Value);
-
             // Linked Tree Nodes List
             List<TreeNode<ProcMon>> ProcessNodes = GetTreeList(ProcMaps);
-
-            TreeNode<ProcMon> one = ProcessNodes[5];
-            TreeNode<ProcMon> temp = one.FindTreeNode(node => node.Data != null && node.Data.ProcessID == 5064);
 
             // Inter Node Mapping
             List<TreeNode<ProcMon>> LinkedProcessNodes = MakeTreeListNew(ProcessNodes);
 
-            //Sort by number of processes
-            //Dictionary<string, List<ProcMon>> sortedProcessBuckets = ProcessBuckets.OrderByDescending(x => x.Value.Capacity).ToDictionary(x => x.Key, x => x.Value);
+            // Sorting
+            //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
+            //var timeOfDay = ProcMaps.OrderBy(x => x.Key.TimeOfDay).ToList();
+
+            TreeNode<ProcMon> one = ProcessNodes[5];
+            TreeNode<ProcMon>? temp = one.FindTreeNode(node => node.Data != null && node.Data.ProcessID == 5064);
 
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
-            //Console.WriteLine("Unique Processes: " + sortedProcessBuckets.Count);
             //Test.NodeListPrinter(ProcessNodes);
             //Test.NodePrinter(one);
             //Test.NodePrinter(temp);
@@ -157,44 +155,6 @@ namespace ProcNet
             }
 
             return false;
-        }
-
-        private static TreeNode<ProcMon>? FindChildNode(TreeNode<ProcMon> Node, int singleRoot)
-        {
-            TreeNode<ProcMon>? result = null;
-            var childNode = Node.Children;
-            
-            // Child Node Count Check
-            if (childNode.Count == 0)
-            {
-                return null;
-            }
-
-            //First Layer (get childNode Match)
-            TreeNode<ProcMon> selectNode = childNode.Where(a => a.Data.ProcessID == singleRoot).First();
-            //var select = test.Select(a => )
-            if (selectNode != null)
-            {
-                result = (TreeNode<ProcMon>?)selectNode;
-            }
-
-            // Recurse
-            else
-            {
-                // Iterate through children
-                foreach (var item in childNode)
-                {
-                    // N Layer
-                    var temp = FindChildNode(item, singleRoot);
-                    if (temp != null)
-                    {
-                        result = temp;
-                    }
-
-                }
-            }
-            return result;
-
         }
     }
 

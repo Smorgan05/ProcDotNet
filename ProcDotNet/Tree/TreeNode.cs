@@ -15,12 +15,12 @@ namespace ProcDotNet.Tree
         public TreeNode<T> Parent { get; set; }
         public ICollection<TreeNode<T>> Children { get; set; }
 
-        public Boolean IsRoot
+        public bool IsRoot
         {
             get { return Parent == null; }
         }
 
-        public Boolean IsLeaf
+        public bool IsLeaf
         {
             get { return Children.Count == 0; }
         }
@@ -29,7 +29,7 @@ namespace ProcDotNet.Tree
         {
             get
             {
-                if (this.IsRoot)
+                if (IsRoot)
                     return 0;
                 return Parent.Level + 1;
             }
@@ -38,20 +38,19 @@ namespace ProcDotNet.Tree
 
         public TreeNode(T data)
         {
-            this.Data = data;
-            this.Children = new LinkedList<TreeNode<T>>();
+            Data = data;
+            Children = new LinkedList<TreeNode<T>>();
 
-            this.ElementsIndex = new LinkedList<TreeNode<T>>();
-            this.ElementsIndex.Add(this);
+            ElementsIndex = new LinkedList<TreeNode<T>>();
+            ElementsIndex.Add(this);
         }
 
         public TreeNode<T> AddChild(T child)
         {
-            TreeNode<T> childNode = new TreeNode<T>(child) { Parent = this };
-            this.Children.Add(childNode);
+            TreeNode<T> childNode = new(child) { Parent = this };
+            Children.Add(childNode);
 
-            this.RegisterChildForSearch(childNode);
-
+            RegisterChildForSearch(childNode);
             return childNode;
         }
 
@@ -68,11 +67,10 @@ namespace ProcDotNet.Tree
         private void RegisterChildForSearch(TreeNode<T> node)
         {
             ElementsIndex.Add(node);
-            if (Parent != null)
-                Parent.RegisterChildForSearch(node);
+            Parent?.RegisterChildForSearch(node);
         }
 
-        public TreeNode<T> FindTreeNode(Func<TreeNode<T>, bool> predicate)
+        public TreeNode<T>? FindTreeNode(Func<TreeNode<T>, bool> predicate)
         {
             return ElementsIndex.FirstOrDefault(predicate);
         }
@@ -89,9 +87,9 @@ namespace ProcDotNet.Tree
         public IEnumerator<TreeNode<T>> GetEnumerator()
         {
             yield return this;
-            foreach (var directChild in this.Children)
+            foreach (TreeNode<T> directChild in Children)
             {
-                foreach (var anyChild in directChild)
+                foreach (TreeNode<T> anyChild in directChild)
                     yield return anyChild;
             }
         }
