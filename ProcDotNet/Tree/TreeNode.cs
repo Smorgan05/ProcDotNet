@@ -54,7 +54,7 @@ namespace ProcDotNet.Tree
             return childNode;
         }
 
-        public override string? ToString()
+        public override string ToString()
         {
             return Data != null ? Data.ToString() : "[data null]";
         }
@@ -67,15 +67,16 @@ namespace ProcDotNet.Tree
         private void RegisterChildForSearch(TreeNode<T> node)
         {
             ElementsIndex.Add(node);
-            Parent?.RegisterChildForSearch(node);
+            Parent.RegisterChildForSearch(node);
         }
 
-        public TreeNode<T>? FindTreeNode(Func<TreeNode<T>, bool> predicate)
+        public TreeNode<T> FindTreeNode(Func<TreeNode<T>, bool> predicate)
         {
             return ElementsIndex.FirstOrDefault(predicate);
         }
 
         #endregion
+
 
         #region iterating
 
@@ -87,9 +88,9 @@ namespace ProcDotNet.Tree
         public IEnumerator<TreeNode<T>> GetEnumerator()
         {
             yield return this;
-            foreach (TreeNode<T> directChild in Children)
+            foreach (var directChild in Children)
             {
-                foreach (TreeNode<T> anyChild in directChild)
+                foreach (var anyChild in directChild)
                     yield return anyChild;
             }
         }

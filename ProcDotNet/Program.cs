@@ -41,7 +41,7 @@ namespace ProcNet
             List<TreeNode<ProcMon>> ProcessNodes = GetTreeList(ProcMaps);
 
             // Inter Node Mapping
-            List<TreeNode<ProcMon>> LinkedProcessNodes = MakeTreeListNew(ProcessNodes);
+            //List<TreeNode<ProcMon>> LinkedProcessNodes = MakeTreeListNew(ProcessNodes);
 
             // Sorting
             //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
@@ -54,8 +54,8 @@ namespace ProcNet
 
             //Test Print Method
             //Test.NodeListPrinter(ProcessNodes);
-            //Test.NodePrinter(one);
-            //Test.NodePrinter(temp);
+            Test.NodePrinter(one);
+            Test.NodePrinter(temp);
             //Test.BucketPrinter(ProcessBuckets);
             //Test.DictionaryPrinter(ProcessBucketGroups);
             //Test.KeyValuePrinter(ProcMaps);
@@ -142,7 +142,7 @@ namespace ProcNet
             foreach (TreeNode<ProcMon> item in tempTreeList)
             {
                 // Find Process ID (Branch => Child of Branch) (Broken)
-                TreeNode<ProcMon>? found = item.FindTreeNode(node => node.Data.ProcessID == singleRoot);
+                TreeNode<ProcMon> found = item.FindTreeNode(node => node.Data != null && node.Data.ProcessID == singleRoot);
                 if (found != null)
                 {
                     Console.WriteLine("found one");
