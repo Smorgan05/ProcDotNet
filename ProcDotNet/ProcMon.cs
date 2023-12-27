@@ -13,11 +13,6 @@ namespace ProcNet
         public bool isNetwork = false;
         public bool isProcess = false;
         public bool isProfiling = false;
-
-        /// <summary>
-        /// Nested Processes
-        /// </summary>
-        public bool hasChildren = false;
         
        
         /// <summary>

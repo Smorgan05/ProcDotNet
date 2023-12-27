@@ -51,7 +51,6 @@ namespace ProcDotNet.Tree
             Children.Add(childNode);
 
             RegisterChildForSearch(childNode);
-
             return childNode;
         }
 
@@ -97,6 +96,11 @@ namespace ProcDotNet.Tree
             }
         }
 
+        internal TreeNode<T> AddChild(TreeNode<T> two)
+        {
+            Children.Add(two);
+            return this;
+        }
         #endregion
     }
 }

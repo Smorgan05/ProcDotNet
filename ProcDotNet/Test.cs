@@ -3,6 +3,8 @@
 
 using ProcDotNet.Tree;
 using System.Diagnostics;
+using System.Text;
+using System.Xml.Linq;
 
 namespace ProcNet
 {
@@ -60,27 +62,24 @@ namespace ProcNet
             }
         }
 
-        internal static void NodeListPrinter(List<TreeNode<ProcMon>> processNodes)
+        internal static void RecNodeListPrinter(List<TreeNode<ProcMon>> processNodes)
         {
             foreach (var process in processNodes)
             {
                 Console.WriteLine();
-                Console.WriteLine(process.Data.ProcessName + " Parent ID: " + process.Data.ParentPID + ": Process ID: " + process.Data.ProcessID);
-                foreach (var item in process.Children)
-                {
-                    Console.WriteLine(item.Data.ProcessName + " Parent ID: " + item.Data.ParentPID + ": Process ID: " + item.Data.ProcessID);
-                }
+                RecNodePrinter(process);
             }
-            //Console.WriteLine();
+
         }
 
-        internal static void NodePrinter(TreeNode<ProcMon> one)
+        internal static void RecNodePrinter(TreeNode<ProcMon> tree, String indent = "", bool last = false)
         {
-            Console.WriteLine();
-            Console.WriteLine(one.Data.ProcessName + " Parent ID: " + one.Data.ParentPID + ": Process ID: " + one.Data.ProcessID);
-            foreach (var item in one.Children)
+            Console.WriteLine(indent + "+- " + tree.Data.ProcessName + ": PID: " + tree.Data.ProcessID);
+            indent += last ? "   " : "|  ";
+
+            for (int i = 0; i < tree.Children.Count; i++)
             {
-                Console.WriteLine(item.Data.ProcessName + " Parent ID: " + item.Data.ParentPID + ": Process ID: " + item.Data.ProcessID);
+                RecNodePrinter(tree.Children.ToList()[i], indent, i == tree.Children.ToList().Count - 1);
             }
         }
 

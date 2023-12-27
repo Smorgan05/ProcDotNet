@@ -24,7 +24,7 @@ namespace ProcNet
 
             //Get Types
             Console.WriteLine("Categorizing Event Classes");
-            PostProcess(recordsTimeFix);
+            List<ProcMon> recordsFixed = PostProcess(recordsTimeFix);
 
             ////Get EventClass Lists
             List<ProcMon> FileSystemEvents = recordsTimeFix.Where(rec => rec.isFileSystem.Equals(true)).ToList();
@@ -199,9 +199,11 @@ namespace ProcNet
         /// </summary>
         /// <param name="records"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private static void PostProcess(List<ProcMon> records)
+        private static List<ProcMon> PostProcess(List<ProcMon> records)
         {
-            foreach (ProcMon record in records)
+            List<ProcMon> result = new List<ProcMon>(records);
+
+            foreach (ProcMon record in result)
             {
                 record.isFileSystem = Support.FileSystemCheck(record);
                 record.isNetwork = Support.NetworkCheck(record);
@@ -209,6 +211,8 @@ namespace ProcNet
                 record.isProfiling = Support.ProfileCheck(record);
                 record.isRegistry = Support.RegistryCheck(record);
             }
+
+            return result;
         }
     }
 }
