@@ -81,7 +81,7 @@ namespace ProcNet
             // Sloppy Merge
             var groups = result.Where(x => x.Value.Count > 0).ToList();
             var singles = result.Where(x => x.Value.Count == 0).ToList();
-            var Merge = Processor.GetMerge(groups, singles);
+            var Merge = GetMerge(groups, singles);
 
             // Merge with Groups
             result = processBucketGroups.Where(x => x.Value.Count != 0).ToList();

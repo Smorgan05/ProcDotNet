@@ -56,7 +56,7 @@ namespace ProcNet
                 Console.WriteLine(process.Key.ProcessName + " Parent ID: " + process.Key.ParentPID + ": Process ID: " + process.Key.ProcessID);
                 foreach (var item in process.Value)
                 {
-                    Console.WriteLine(item.ProcessName + " Parent ID: " + item.ParentPID + ": Process ID: " + item.ProcessID);
+                    Console.WriteLine("-" + item.ProcessName + " Parent ID: " + item.ParentPID + ": Process ID: " + item.ProcessID);
                 }
 
             }
@@ -74,7 +74,7 @@ namespace ProcNet
 
         internal static void RecNodePrinter(TreeNode<ProcMon> tree, String indent = "", bool last = false)
         {
-            Console.WriteLine(indent + "+- " + tree.Data.ProcessName + ": PID: " + tree.Data.ProcessID);
+            Console.WriteLine(indent + "+- " + tree.Data.ProcessName + ": PPID: " + tree.Data.ParentPID + ": PID: " + tree.Data.ProcessID);
             indent += last ? "   " : "|  ";
 
             for (int i = 0; i < tree.Children.Count; i++)
