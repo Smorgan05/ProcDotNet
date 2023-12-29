@@ -31,14 +31,33 @@ namespace ProcNet
             string testPath = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile.CSV";
             string testPathNew = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile_12_26_2023.CSV";
 
-            // Tree Testing
-            //ProcDotNet.Tree.SampleIterating.MainTest();
+            var ProcTreeCheck = ProcessTreeMaker(testPath);
 
-            //TreeNode<string> treeRoot = SampleData.GetSet1();
-            //TreeNode<string> found = treeRoot.FindTreeNode(node => node.Data != null && node.Data.Contains("210"));
+            // Sorting
+            //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
+            //var timeOfDay = ProcMaps.OrderBy(x => x.Key.TimeOfDay).ToList();
 
+            //Test.DictionaryPrinter(timeOfDayBuckets);
+
+            //Test Print Method
+            Test.RecNodeListPrinter(ProcTreeCheck);
+            //Test.RecNodePrinter(node.Children.First());
+            //Test.RecNodePrinter(LinkProcessNodes[4]);
+            //Test.BucketPrinter(ProcessBuckets);
+            //Test.DictionaryPrinter(ProcessBucketGroups);
+            //Test.KeyValuePrinter(ProcMaps);
+            //Test.Printer(childProcs);
+
+
+        }
+
+        internal static List<TreeNode<ProcMon>> ProcessTreeMaker(string filePath)
+        {
             // Load ProcMon CSV (with Fixed Times)
-            var ProcessBuckets = Processor.LoadCSV(testPath);
+            var ProcessDicts = Processor.LoadLists(filePath);
+
+            // Load Buckes
+            var ProcessBuckets = Processor.ProcessSorter(ProcessDicts["ProfileEvents"]);
 
             //Get Process Buckets
             List<KeyValuePair<ProcMon, List<ProcMon>>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
@@ -51,44 +70,7 @@ namespace ProcNet
 
             // Inter Node Mapping (Good?)
             List<TreeNode<ProcMon>> LinkProcessNodes = NodeProcessor.MakeTreeList(ProcessNodes);
-
-            //FinalNodes[4].Children = FinalNodes[4].Children.DistinctBy(x => x.Data.ProcessID).ToList();
-
-            //TreeNode<ProcMon> node = LinkProcessNodes[4];
-
-            // Sorting
-            //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
-            //var timeOfDay = ProcMaps.OrderBy(x => x.Key.TimeOfDay).ToList();
-
-            //Test.DictionaryPrinter(timeOfDayBuckets);
-
-            //Test Print Method
-            Test.RecNodeListPrinter(LinkProcessNodes);
-            //Test.RecNodePrinter(node.Children.First());
-            //Test.RecNodePrinter(LinkProcessNodes[4]);
-            //Test.BucketPrinter(ProcessBuckets);
-            //Test.DictionaryPrinter(ProcessBucketGroups);
-            //Test.KeyValuePrinter(ProcMaps);
-            //Test.Printer(childProcs);
-
-
-        }
-
-        private static List<KeyValuePair<ProcMon, List<ProcMon>>> ConvertToKVP(List<TreeNode<ProcMon>> processNodes)
-        {
-            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
-            foreach (var item in processNodes)
-            {
-                List<ProcMon> list = new List<ProcMon>();
-                foreach (var child in item.Children)
-                {
-                    list.Add(child.Data);
-                }
-                var element = new KeyValuePair<ProcMon, List<ProcMon>>(item.Data, list);
-                result.Add(element);
-            }
-
-            return result;
+            return LinkProcessNodes;
         }
 
         

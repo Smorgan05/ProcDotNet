@@ -2,6 +2,7 @@
 
 
 using CsvHelper;
+using ProcDotNet.Tree;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,7 +12,7 @@ namespace ProcNet
 {
     internal class Processor
     {
-        internal static Dictionary<string, List<ProcMon>> LoadCSV(string testPath)
+        internal static Dictionary<string, List<ProcMon>> LoadLists(string testPath)
         {
             // Raw Processing
             Console.WriteLine("Processing CSV: " + testPath);
@@ -26,18 +27,41 @@ namespace ProcNet
             Console.WriteLine("Categorizing Event Classes");
             List<ProcMon> recordsFixed = PostProcess(recordsTimeFix);
 
-            ////Get EventClass Lists
-            List<ProcMon> FileSystemEvents = recordsTimeFix.Where(rec => rec.isFileSystem.Equals(true)).ToList();
-            List<ProcMon> NetworkEvents = recordsTimeFix.Where(rec => rec.isNetwork.Equals(true)).ToList();
-            List<ProcMon> ProcessEvents = recordsTimeFix.Where(rec => rec.isProcess.Equals(true)).ToList();
-            List<ProcMon> ProfileEvents = recordsTimeFix.Where(rec => rec.isProfiling.Equals(true)).ToList();
-            List<ProcMon> RegistryEvents = recordsTimeFix.Where(rec => rec.isRegistry.Equals(true)).ToList();
+            //Get EventClass Lists
+            List<ProcMon> FileSystemEvents = recordsFixed.Where(rec => rec.isFileSystem.Equals(true)).ToList();
+            List<ProcMon> NetworkEvents = recordsFixed.Where(rec => rec.isNetwork.Equals(true)).ToList();
+            List<ProcMon> ProcessEvents = recordsFixed.Where(rec => rec.isProcess.Equals(true)).ToList();
+            List<ProcMon> ProfileEvents = recordsFixed.Where(rec => rec.isProfiling.Equals(true)).ToList();
+            List<ProcMon> RegistryEvents = recordsFixed.Where(rec => rec.isRegistry.Equals(true)).ToList();
 
-            //Gather Process Buckets
-            Console.WriteLine("Gathering Unique Processes");
-            List<string> UniqueProcs = ProfileEvents.Select(x => x.ProcessName).ToList();
-            Dictionary<string, List<ProcMon>> ProcessBuckets = ProcessSorter(ProfileEvents, UniqueProcs);
-            return ProcessBuckets;
+            // Build Return
+            Dictionary<string, List<ProcMon>> result = new Dictionary<string, List<ProcMon>>
+            {
+                { "FileSystemEvents", FileSystemEvents },
+                { "NetworkEvents", NetworkEvents },
+                { "ProcessEvents", ProcessEvents },
+                { "ProfileEvents", ProfileEvents },
+                { "RegistryEvents", RegistryEvents }
+            };
+
+            return result;
+        }
+
+        internal static List<KeyValuePair<ProcMon, List<ProcMon>>> ConvertToKVP(List<TreeNode<ProcMon>> processNodes)
+        {
+            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
+            foreach (var item in processNodes)
+            {
+                List<ProcMon> list = new List<ProcMon>();
+                foreach (var child in item.Children)
+                {
+                    list.Add(child.Data);
+                }
+                var element = new KeyValuePair<ProcMon, List<ProcMon>>(item.Data, list);
+                result.Add(element);
+            }
+
+            return result;
         }
 
         internal static List<KeyValuePair<ProcMon, List<ProcMon>>> GetProcessBucketGroups(Dictionary<string, List<ProcMon>> processBuckets)
@@ -162,11 +186,14 @@ namespace ProcNet
             return result;
         }
 
-        private static Dictionary<string, List<ProcMon>> ProcessSorter(List<ProcMon> records, List<string> uniqueProcs)
+        internal static Dictionary<string, List<ProcMon>> ProcessSorter(List<ProcMon> records)
         {
+            //Gather Process Buckets
+            Console.WriteLine("Gathering Unique Processes");
+            List<string> UniqueProcs = records.Select(x => x.ProcessName).ToList();
             Dictionary<string, List<ProcMon>> tempRes = new();
             Dictionary<string, List<ProcMon>> result = new();
-            foreach (var proc in uniqueProcs)
+            foreach (var proc in UniqueProcs)
             {
                 // List of Duplicates
                 List<ProcMon> temp = records.FindAll(x => x.ProcessName.Equals(proc, StringComparison.OrdinalIgnoreCase)).ToList();

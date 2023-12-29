@@ -115,13 +115,13 @@ namespace ProcDotNet
                     parent.Children.Remove(remove);
                 }
             }
-            else if (parent != null & mapResult != null && !parent.Children.Contains(mapResult))
-            {
-                parent.AddChild(mapResult);
-            }
 
-            Result = SingleDedup(Result);
-            return Result;
+            //else if (parent != null & mapResult != null && !parent.Children.Contains(mapResult))
+            //{
+            //    parent.AddChild(mapResult);
+            //}
+
+            return SingleDedup(Result);
         }
 
         internal static TreeNode<ProcMon> Mapper(List<TreeNode<ProcMon>> Nodes, TreeNode<ProcMon> currentNode)
