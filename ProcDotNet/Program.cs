@@ -31,7 +31,17 @@ namespace ProcNet
             string testPath = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile.CSV";
             string testPathNew = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile_12_26_2023.CSV";
 
+            // Load ProcMon CSV (with Fixed Times)
+
+            // Process Tree Testing
             var ProcTreeCheck = ProcessTreeMaker(testPath);
+
+            // Event Classes
+            var ProcessDicts = Processor.LoadLists(testPath);
+            var Registry = ProcessDicts["RegistryEvents"];
+            var Network = ProcessDicts["NetworkEvents"];
+            var FileSystem = ProcessDicts["FileSystemEvents"];
+            var Process = ProcessDicts["ProcessEvents"];
 
             // Sorting
             //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
