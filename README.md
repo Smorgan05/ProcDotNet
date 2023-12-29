@@ -1,4 +1,4 @@
-# ProcDotNet
+# ProcMon Visualizer
 Version: 0.1
 
 ## Usuage Instructions
