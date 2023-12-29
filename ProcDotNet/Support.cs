@@ -2,6 +2,7 @@
 
 
 using System.Globalization;
+using ProcDotNet.Classes;
 
 namespace ProcNet
 {

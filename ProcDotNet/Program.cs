@@ -4,6 +4,7 @@
 using CsvHelper;
 using Microsoft.Win32;
 using ProcDotNet;
+using ProcDotNet.Classes;
 using ProcDotNet.Tree;
 using System;
 using System.Collections;
@@ -34,7 +35,7 @@ namespace ProcNet
             // Load ProcMon CSV (with Fixed Times)
 
             // Process Tree Testing
-            var ProcTreeCheck = ProcessTreeMaker(testPath);
+            //var ProcTreeCheck = ProcessTreeMaker(testPath);
 
             // Event Classes
             var ProcessDicts = Processor.LoadLists(testPath);
@@ -50,15 +51,13 @@ namespace ProcNet
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
-            Test.RecNodeListPrinter(ProcTreeCheck);
+            //Test.RecNodeListPrinter(ProcTreeCheck);
             //Test.RecNodePrinter(node.Children.First());
             //Test.RecNodePrinter(LinkProcessNodes[4]);
             //Test.BucketPrinter(ProcessBuckets);
             //Test.DictionaryPrinter(ProcessBucketGroups);
             //Test.KeyValuePrinter(ProcMaps);
             //Test.Printer(childProcs);
-
-
         }
 
         internal static List<TreeNode<ProcMon>> ProcessTreeMaker(string filePath)

@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 
+using ProcDotNet.Classes;
 using ProcDotNet.Tree;
 using System.Diagnostics;
 using System.Text;
