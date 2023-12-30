@@ -39,10 +39,10 @@ namespace ProcNet
 
             // Event Classes
             var ProcessDicts = Processor.LoadLists(testPath);
-            var Registry = ProcessDicts["RegistryEvents"];
-            var Network = ProcessDicts["NetworkEvents"];
-            var FileSystem = ProcessDicts["FileSystemEvents"];
-            var Process = ProcessDicts["ProcessEvents"];
+            var Registry = ProcessDicts[EventClass.Registry];
+            var Network = ProcessDicts[EventClass.Network];
+            var FileSystem = ProcessDicts[EventClass.FileSystem];
+            var Process = ProcessDicts[EventClass.Process];
 
             // Sorting
             //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
@@ -66,7 +66,7 @@ namespace ProcNet
             var ProcessDicts = Processor.LoadLists(filePath);
 
             // Load Buckes
-            var ProcessBuckets = Processor.ProcessSorter(ProcessDicts["ProfileEvents"]);
+            var ProcessBuckets = Processor.ProcessSorter(ProcessDicts[EventClass.Profiling]);
 
             //Get Process Buckets
             List<KeyValuePair<ProcMon, List<ProcMon>>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);

@@ -38,11 +38,11 @@ namespace ProcNet
             // Build Return
             Dictionary<string, List<ProcMon>> result = new Dictionary<string, List<ProcMon>>
             {
-                { "FileSystemEvents", FileSystemEvents }, 
-                { "NetworkEvents", NetworkEvents },
-                { "ProcessEvents", ProcessEvents },
-                { "ProfileEvents", ProfileEvents }, // Process Tree
-                { "RegistryEvents", RegistryEvents }
+                { EventClass.FileSystem, FileSystemEvents }, 
+                { EventClass.Network, NetworkEvents },
+                { EventClass.Process, ProcessEvents },
+                { EventClass.Profiling, ProfileEvents }, // Process Tree
+                { EventClass.Registry, RegistryEvents }
             };
 
             return result;
