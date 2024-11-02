@@ -34,6 +34,7 @@ namespace ProcNet
             List<ProcMon> ProcessEvents = recordsFixed.Where(rec => rec.isProcess.Equals(true)).ToList();
             List<ProcMon> ProfileEvents = recordsFixed.Where(rec => rec.isProfiling.Equals(true)).ToList();
             List<ProcMon> RegistryEvents = recordsFixed.Where(rec => rec.isRegistry.Equals(true)).ToList();
+            List<ProcMon> AllEvents = recordsFixed;
 
             // Build Return
             Dictionary<string, List<ProcMon>> result = new Dictionary<string, List<ProcMon>>
@@ -42,7 +43,8 @@ namespace ProcNet
                 { EventClass.Network, NetworkEvents },
                 { EventClass.Process, ProcessEvents },
                 { EventClass.Profiling, ProfileEvents }, // Process Tree
-                { EventClass.Registry, RegistryEvents }
+                { EventClass.Registry, RegistryEvents },
+                { EventClass.All, AllEvents }
             };
 
             return result;

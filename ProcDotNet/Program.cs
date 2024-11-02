@@ -43,10 +43,11 @@ namespace ProcNet
             var Network = ProcessDicts[EventClass.Network];
             var FileSystem = ProcessDicts[EventClass.FileSystem];
             var Process = ProcessDicts[EventClass.Process];
+            var AllEvents = ProcessDicts[EventClass.All];
 
             // Sorting
             //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
-            var timeOfDay = Registry.OrderBy(x => x.TimeOfDay).ToList();
+            var timeOfDay = AllEvents.OrderBy(x => x.TimeOfDay).ToList();
 
             //Test.DictionaryPrinter(timeOfDayBuckets);
 

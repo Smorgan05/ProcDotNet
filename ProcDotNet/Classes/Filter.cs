@@ -19,6 +19,7 @@ namespace ProcDotNet.Classes
         public const string Process = "Process";
         public const string Profiling = "Profiling";
         public const string Registry = "Registry";
+        public const string All = "All";
     }
 
     internal class Result
