@@ -26,7 +26,7 @@ namespace ProcNet
 
             //Get Types
             Console.WriteLine("Categorizing Event Classes");
-            List<ProcMon> recordsFixed = PostProcess(recordsTimeFix);
+            List<ProcMon> recordsFixed = PostProcess(records);
 
             //Get EventClass Lists
             List<ProcMon> FileSystemEvents = recordsFixed.Where(rec => rec.isFileSystem.Equals(true)).ToList();

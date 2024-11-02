@@ -23,17 +23,14 @@ namespace ProcNet
             }
         }
 
-        internal static void DictionaryPrinter(Dictionary<string, List<ProcMon>> sortedProcessBuckets)
+        internal static void DictionaryPrinter(Dictionary<string, List<ProcMon>> sortedProcessBuckets, string EventClass)
         {
-            foreach (var procMon in sortedProcessBuckets)
+            List<ProcMon> List = sortedProcessBuckets[EventClass];
+            foreach (var item in List)
             {
-                Console.WriteLine();
-                Console.WriteLine("Process: " + procMon.Key);
-                foreach (var process in procMon.Value)
-                {
-                    Console.WriteLine(process.ProcessName + ": " + process.ProcessID);
-                }
+                Console.WriteLine(item.SequenceNumber + " " + EventClass + ": " + item.ProcessName + " " + item.Operation + " " + item.Path);
             }
+        
         }
 
         internal static void DictionaryPrinter(Dictionary<ProcMon, List<ProcMon>> processDictionary)
@@ -86,10 +83,10 @@ namespace ProcNet
 
         internal static void Printer(List<ProcMon> linkedProc)
         {
-            Console.WriteLine("Nested Process List:");
+            Console.WriteLine("Process List:");
             foreach (ProcMon item in linkedProc)
             {
-                Console.WriteLine(item.ProcessName);
+                Console.WriteLine(item.TimeOfDay + ": " + item.ProcessName);
             }
         }
     }

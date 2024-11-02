@@ -35,10 +35,10 @@ namespace ProcNet
             // Load ProcMon CSV (with Fixed Times)
 
             // Process Tree Testing
-            //var ProcTreeCheck = ProcessTreeMaker(testPath);
+            var ProcTreeCheck = ProcessTreeMaker(testPath);
 
             // Event Classes
-            var ProcessDicts = Processor.LoadLists(testPath);
+            Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
             var Registry = ProcessDicts[EventClass.Registry];
             var Network = ProcessDicts[EventClass.Network];
             var FileSystem = ProcessDicts[EventClass.FileSystem];
@@ -46,18 +46,19 @@ namespace ProcNet
 
             // Sorting
             //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
-            //var timeOfDay = ProcMaps.OrderBy(x => x.Key.TimeOfDay).ToList();
+            var timeOfDay = Registry.OrderBy(x => x.TimeOfDay).ToList();
 
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
             //Test.RecNodeListPrinter(ProcTreeCheck);
+            //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
+
             //Test.RecNodePrinter(node.Children.First());
             //Test.RecNodePrinter(LinkProcessNodes[4]);
             //Test.BucketPrinter(ProcessBuckets);
-            //Test.DictionaryPrinter(ProcessBucketGroups);
             //Test.KeyValuePrinter(ProcMaps);
-            //Test.Printer(childProcs);
+            Test.Printer(timeOfDay);
         }
 
         internal static List<TreeNode<ProcMon>> ProcessTreeMaker(string filePath)

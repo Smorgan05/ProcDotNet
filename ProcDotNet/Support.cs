@@ -65,36 +65,36 @@ namespace ProcNet
             return result;
         }
 
-        internal static DateTime ParseTime(ProcMon procMon)
+        internal static string ParseTime(ProcMon procMon)
         {
             string properTime = string.Empty;
+            string rem = string.Empty;
             int partial = procMon.DateAndTime.Hour;
             if (procMon.TimeOfDay.Contains("PM"))
             {
                 var fix = partial + ":" + procMon.TimeOfDay.Split(':', 2)[1];
-                var rem = fix.Substring(0, fix.Length - 3);
-                //var rem = procMon.TimeOfDay.Substring(0, procMon.TimeOfDay.Length - 3);
-                properTime = procMon.DateAndTime.ToShortDateString() + " " + rem;
+                rem = fix.Substring(0, fix.Length - 3);
+                //properTime = procMon.DateAndTime.ToShortDateString() + " " + rem;
             }
             if (procMon.TimeOfDay.Contains("AM"))
             {
-                var rem = procMon.TimeOfDay.Substring(0, procMon.TimeOfDay.Length - 3);
-                properTime = procMon.DateAndTime.ToShortDateString() + " " + rem;
+                rem = procMon.TimeOfDay.Substring(0, procMon.TimeOfDay.Length - 3);
+                //properTime = procMon.DateAndTime.ToShortDateString() + " " + rem;
             }
 
-            DateTime result = DateTime.MinValue;
-            string format = "MM/dd/yyyy HH:mm:ss.fffffff";
-            try
-            {
-                result = DateTime.ParseExact(properTime, format, CultureInfo.InvariantCulture);
-                //Console.WriteLine("{0} converts to {1}.", properTime, result.ToString());
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("{0} is not in the correct format.", properTime);
-            }
+            //DateTime result = DateTime.MinValue;
+            //string format = "HH:mm:ss.fffffff";
+            //try
+            //{
+            //    result = DateTime.ParseExact(rem, format, CultureInfo.InvariantCulture);
+            //    //Console.WriteLine("{0} converts to {1}.", properTime, result.ToString());
+            //}
+            //catch (FormatException)
+            //{
+            //    Console.WriteLine("{0} is not in the correct format.", properTime);
+            //}
 
-            return result;
+            return rem;
         }
 
     }
