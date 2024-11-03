@@ -3,7 +3,6 @@
 
 using System.Globalization;
 using ProcDotNet.Classes;
-using ProcDotNet.Tree;
 
 namespace ProcDotNet
 {

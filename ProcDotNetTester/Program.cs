@@ -2,10 +2,11 @@
 using ProcDotNet.Classes;
 using static System.Net.Mime.MediaTypeNames;
 using System.Diagnostics;
-using ProcDotNet.Tree;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
 namespace ProcDotNetTester
 {
@@ -31,12 +32,25 @@ namespace ProcDotNetTester
             //var Process = ProcessDicts[EventClass.Process];
             //var AllEvents = ProcessDicts[EventClass.All];
 
-            string json = Support.JSONConv(ProcTree, ProcessDicts);
+            string json = Support.JSONConvEvents(ProcessDicts);
+            string ProcTreeJson = Support.JSONConv(ProcTree);
+
+
+            //string output = JsonConvert.SerializeObject(ProcTree);
+
+            var serializer = new DataContractJsonSerializer(ProcTree.GetType());
+
+            using (FileStream stream = File.Create(@"C:\Users\Dark\Documents\ProcDotNet Local\ProcessTree.json"))
+            {
+
+                serializer.WriteObject(stream, ProcTree);
+            }
 
             // Print or use the JSON string as needed
             //Console.WriteLine(json);
 
-            File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\Test.json", json);
+            //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\Test.json", json);
+            //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\ProcessTree.json", ProcTreeJson);
 
             // Sorting
             //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();

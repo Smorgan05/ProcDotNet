@@ -90,4 +90,6 @@ namespace ProcDotNet.Classes
         public string? Virtualized { get; set; }
 
     }
+
+
 }

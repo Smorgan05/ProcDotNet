@@ -2,29 +2,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProcDotNet.Tree
+namespace ProcDotNet.Classes
 {
-    [Serializable]
-    public class TreeNode<T> : IEnumerable<TreeNode<T>>
+    [Serializable, DataContract(IsReference = true)]
+    public class TreeNode<ProcMon> : IEnumerable<TreeNode<ProcMon>>
     {
 
-        public T Data { get; set; }
-        public TreeNode<T> Parent { get; set; }
-        public ICollection<TreeNode<T>> Children { get; set; }
+        [DataMember] public ProcMon Data { get; set; }
+        [DataMember] public TreeNode<ProcMon> Parent { get; set; }
+        [DataMember] public ICollection<TreeNode<ProcMon>> Children { get; set; }
 
+        //?[DataMember]
         public bool IsRoot
         {
             get { return Parent == null; }
         }
 
+        //[DataMember]
         public bool IsLeaf
         {
             get { return Children.Count == 0; }
         }
 
+        //[DataMember]
         public int Level
         {
             get
@@ -36,18 +40,18 @@ namespace ProcDotNet.Tree
         }
 
 
-        public TreeNode(T data)
+        public TreeNode(ProcMon data)
         {
             Data = data;
-            Children = new LinkedList<TreeNode<T>>();
+            Children = new LinkedList<TreeNode<ProcMon>>();
 
-            ElementsIndex = new LinkedList<TreeNode<T>>();
+            ElementsIndex = new LinkedList<TreeNode<ProcMon>>();
             ElementsIndex.Add(this);
         }
 
-        public TreeNode<T> AddChild(T child)
+        public TreeNode<ProcMon> AddChild(ProcMon child)
         {
-            TreeNode<T> childNode = new(child) { Parent = this };
+            TreeNode<ProcMon> childNode = new(child) { Parent = this };
             Children.Add(childNode);
 
             RegisterChildForSearch(childNode);
@@ -62,16 +66,16 @@ namespace ProcDotNet.Tree
 
         #region searching
 
-        private ICollection<TreeNode<T>> ElementsIndex { get; set; }
+        private ICollection<TreeNode<ProcMon>> ElementsIndex { get; set; }
 
-        private void RegisterChildForSearch(TreeNode<T> node)
+        private void RegisterChildForSearch(TreeNode<ProcMon> node)
         {
             ElementsIndex.Add(node);
             if (Parent != null)
                 Parent.RegisterChildForSearch(node);
         }
 
-        public TreeNode<T> FindTreeNode(Func<TreeNode<T>, bool> predicate)
+        public TreeNode<ProcMon> FindTreeNode(Func<TreeNode<ProcMon>, bool> predicate)
         {
             return ElementsIndex.FirstOrDefault(predicate);
         }
@@ -86,7 +90,7 @@ namespace ProcDotNet.Tree
             return GetEnumerator();
         }
 
-        public IEnumerator<TreeNode<T>> GetEnumerator()
+        public IEnumerator<TreeNode<ProcMon>> GetEnumerator()
         {
             yield return this;
             foreach (var directChild in Children)
@@ -96,11 +100,16 @@ namespace ProcDotNet.Tree
             }
         }
 
-        internal TreeNode<T> AddChild(TreeNode<T> two)
+        internal TreeNode<ProcMon> AddChild(TreeNode<ProcMon> two)
         {
             Children.Add(two);
             return this;
         }
         #endregion
+    }
+
+    public interface ISerializableNode
+    {
+        object ToSerializableObject(Func<TreeNode<ProcMon>, bool> excludeCondition);
     }
 }
