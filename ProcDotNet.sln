@@ -5,7 +5,12 @@ VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcDotNet", "ProcDotNet\ProcDotNet.csproj", "{DB2021C8-3AFD-4C4A-8573-66766055C2A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcDotNetTester", "ProcDotNetTester\ProcDotNetTester.csproj", "{607D820E-DCFA-46BD-B4D5-CD33379DB660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProcDotNetTester", "ProcDotNetTester\ProcDotNetTester.csproj", "{607D820E-DCFA-46BD-B4D5-CD33379DB660}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F04304D9-81B8-4020-8F7D-D13B0A391B02}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

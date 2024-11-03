@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProcDotNet.Tree
 {
+    [Serializable]
     public class TreeNode<T> : IEnumerable<TreeNode<T>>
     {
 
