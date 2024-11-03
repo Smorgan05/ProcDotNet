@@ -1,5 +1,5 @@
-# ProcMon Visualizer
-Version: 0.1
+# ProcMon Visualizer Library
+Version: 0.2
 
 ## Usuage Instructions
 1. Run Procmon with all fields enabled.
