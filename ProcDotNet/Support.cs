@@ -3,10 +3,11 @@
 
 using System.Globalization;
 using ProcDotNet.Classes;
+using ProcDotNet.Tree;
 
-namespace ProcNet
+namespace ProcDotNet
 {
-    internal class Support
+    public class Support
     {
 
 
@@ -95,6 +96,28 @@ namespace ProcNet
             //}
 
             return rem;
+        }
+
+        public static List<TreeNode<ProcMon>> ProcessTreeMaker(string filePath)
+        {
+            // Load ProcMon CSV (with Fixed Times)
+            var ProcessDicts = Processor.LoadLists(filePath);
+
+            // Load Buckes
+            var ProcessBuckets = Processor.ProcessSorter(ProcessDicts[EventClass.Profiling]);
+
+            //Get Process Buckets
+            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
+
+            // Map Disparate Processes
+            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = Processor.GetInterProcMapping(ProcessBucketGroups);
+
+            // Map KVPs to Process Nodes (Good)
+            List<TreeNode<ProcMon>> ProcessNodes = NodeProcessor.GetTreeList(ProcMaps);
+
+            // Inter Node Mapping (Good?)
+            List<TreeNode<ProcMon>> LinkProcessNodes = NodeProcessor.MakeTreeList(ProcessNodes);
+            return LinkProcessNodes;
         }
 
     }

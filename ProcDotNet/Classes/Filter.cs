@@ -12,7 +12,7 @@ namespace ProcDotNet.Classes
         public const string x64 = "64-bit";
     }
 
-    internal class EventClass
+    public class EventClass
     {
         public const string FileSystem = "File System";
         public const string Network = "Network";

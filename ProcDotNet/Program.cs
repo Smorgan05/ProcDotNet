@@ -3,7 +3,6 @@
 
 using CsvHelper;
 using Microsoft.Win32;
-using ProcDotNet;
 using ProcDotNet.Classes;
 using ProcDotNet.Tree;
 using System;
@@ -21,70 +20,35 @@ using System.Xml.XPath;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace ProcNet
+namespace ProcDotNet
 {
     class Program
     {
         static void Main(string[] args)
         {
-            string parentProc = "explorer.exe";
-            string process = "brave.exe";
-            string testPath = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile.CSV";
-            string testPathNew = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile_12_26_2023.CSV";
+            //string parentProc = "explorer.exe";
+            //string process = "brave.exe";
+            //string testPath = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile.CSV";
+            //string testPathNew = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile_12_26_2023.CSV";
 
             // Load ProcMon CSV (with Fixed Times)
 
             // Process Tree Testing
-            var ProcTreeCheck = ProcessTreeMaker(testPath);
+            //var ProcTreeCheck = Support.ProcessTreeMaker(testPath);
 
             // Event Classes
-            Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
-            var Registry = ProcessDicts[EventClass.Registry];
-            var Network = ProcessDicts[EventClass.Network];
-            var FileSystem = ProcessDicts[EventClass.FileSystem];
-            var Process = ProcessDicts[EventClass.Process];
-            var AllEvents = ProcessDicts[EventClass.All];
+            //Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
+            //var Registry = ProcessDicts[EventClass.Registry];
+            //var Network = ProcessDicts[EventClass.Network];
+            //var FileSystem = ProcessDicts[EventClass.FileSystem];
+            //var Process = ProcessDicts[EventClass.Process];
+            //var AllEvents = ProcessDicts[EventClass.All];
 
             // Sorting
             //var procName = ProcMaps.OrderBy(x => x.Key.ProcessName).ToList();
-            var timeOfDay = AllEvents.OrderBy(x => x.TimeOfDay).ToList();
-
-            //Test.DictionaryPrinter(timeOfDayBuckets);
-
-            //Test Print Method
-            //Test.RecNodeListPrinter(ProcTreeCheck);
-            //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
-
-            //Test.RecNodePrinter(node.Children.First());
-            //Test.RecNodePrinter(LinkProcessNodes[4]);
-            //Test.BucketPrinter(ProcessBuckets);
-            //Test.KeyValuePrinter(ProcMaps);
-            Test.Printer(timeOfDay);
+            //var timeOfDay = AllEvents.OrderBy(x => x.TimeOfDay).ToList();
         }
 
-        internal static List<TreeNode<ProcMon>> ProcessTreeMaker(string filePath)
-        {
-            // Load ProcMon CSV (with Fixed Times)
-            var ProcessDicts = Processor.LoadLists(filePath);
-
-            // Load Buckes
-            var ProcessBuckets = Processor.ProcessSorter(ProcessDicts[EventClass.Profiling]);
-
-            //Get Process Buckets
-            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
-
-            // Map Disparate Processes
-            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = Processor.GetInterProcMapping(ProcessBucketGroups);
-
-            // Map KVPs to Process Nodes (Good)
-            List<TreeNode<ProcMon>> ProcessNodes = NodeProcessor.GetTreeList(ProcMaps);
-
-            // Inter Node Mapping (Good?)
-            List<TreeNode<ProcMon>> LinkProcessNodes = NodeProcessor.MakeTreeList(ProcessNodes);
-            return LinkProcessNodes;
-        }
-
-        
     }
 
 }

@@ -9,11 +9,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 
-namespace ProcNet
+namespace ProcDotNet
 {
-    internal class Processor
+    public class Processor
     {
-        internal static Dictionary<string, List<ProcMon>> LoadLists(string testPath)
+        public static Dictionary<string, List<ProcMon>> LoadLists(string testPath)
         {
             // Raw Processing
             Console.WriteLine("Processing CSV: " + testPath);
@@ -39,7 +39,7 @@ namespace ProcNet
             // Build Return
             Dictionary<string, List<ProcMon>> result = new Dictionary<string, List<ProcMon>>
             {
-                { EventClass.FileSystem, FileSystemEvents }, 
+                { EventClass.FileSystem, FileSystemEvents },
                 { EventClass.Network, NetworkEvents },
                 { EventClass.Process, ProcessEvents },
                 { EventClass.Profiling, ProfileEvents }, // Process Tree
@@ -201,7 +201,7 @@ namespace ProcNet
                 // List of Duplicates
                 List<ProcMon> temp = records.FindAll(x => x.ProcessName.Equals(proc, StringComparison.OrdinalIgnoreCase)).ToList();
                 var check = temp.DistinctBy(x => x.ProcessID).ToList();
-                
+
                 if (tempRes.ContainsKey(proc))
                 {
                     tempRes[proc].AddRange(check);

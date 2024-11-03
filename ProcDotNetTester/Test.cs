@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml.Linq;
 
-namespace ProcNet
+namespace ProcDotNetTester
 {
     internal class Test
     {
@@ -30,7 +30,7 @@ namespace ProcNet
             {
                 Console.WriteLine(item.SequenceNumber + " " + EventClass + ": " + item.ProcessName + " " + item.Operation + " " + item.Path);
             }
-        
+
         }
 
         internal static void DictionaryPrinter(Dictionary<ProcMon, List<ProcMon>> processDictionary)
@@ -48,7 +48,7 @@ namespace ProcNet
 
         internal static void KeyValuePrinter(List<KeyValuePair<ProcMon, List<ProcMon>>> processBucketGroups)
         {
-            foreach(var process in processBucketGroups)
+            foreach (var process in processBucketGroups)
             {
                 Console.WriteLine();
                 Console.WriteLine(process.Key.ProcessName + " Parent ID: " + process.Key.ParentPID + ": Process ID: " + process.Key.ProcessID);
@@ -70,7 +70,7 @@ namespace ProcNet
 
         }
 
-        internal static void RecNodePrinter(TreeNode<ProcMon> tree, String indent = "", bool last = false)
+        internal static void RecNodePrinter(TreeNode<ProcMon> tree, string indent = "", bool last = false)
         {
             Console.WriteLine(indent + "+- " + tree.Data.ProcessName + ": PPID: " + tree.Data.ParentPID + ": PID: " + tree.Data.ProcessID);
             indent += last ? "   " : "|  ";
