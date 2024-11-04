@@ -1,5 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProcDotNet.Classes
 {
@@ -21,10 +22,10 @@ namespace ProcDotNet.Classes
         /// RAW Processed Attributes
         /// </summary>
         //Application Data
-        [Name("Process Name")]
-        public required string ProcessName { get; set; }
-        [Name("Image Path")]
-        public required string ImagePath { get; set; }
+        [Name("Process Name"), Required]
+        public string ProcessName { get; set; }
+        [Name("Image Path"), Required]
+        public string ImagePath { get; set; }
         [Name("Command Line")]
         public string? CommandLine { get; set; }
         [Name("Company")]
@@ -40,17 +41,17 @@ namespace ProcDotNet.Classes
         [Name("Sequence")]
         public string? SequenceNumber { get; set; }
 
-        [Name("Event Class")]
-        public required string EventClass { get; set; }
+        [Name("Event Class"), Required]
+        public string EventClass { get; set; }
 
-        [Name("Operation")]
-        public required string Operation { get; set; }
+        [Name("Operation"), Required]
+        public string Operation { get; set; }
 
-        [Name("Date & Time")]
-        public required DateTime DateAndTime { get; set; }
+        [Name("Date & Time"), Required]
+        public DateTime DateAndTime { get; set; }
 
-        [Name("Time of Day")]
-        public required string TimeOfDay { get; set; }
+        [Name("Time of Day"), Required]
+        public string TimeOfDay { get; set; }
 
         [Name("Category")]
         public string? Category { get; set; }
@@ -77,17 +78,17 @@ namespace ProcDotNet.Classes
         [Name("User")]
         public string? UserName { get; set; }
         [Name("Session")]
-        public int? SessionID { get; set; }
+        public int? Session { get; set; }
         [Name("Authentication ID")]
         public string? AuthenticationID { get; set; }
         [Name("Integrity")]
         public string? Integrity { get; set; }
-        [Name("PID")]
-        public required int ProcessID { get; set; }
+        [Name("PID"), Required]
+        public int ProcessID { get; set; }
         [Name("TID")]
         public int? ThreadID { get; set; }
-        [Name("Parent PID")]
-        public required int ParentPID { get; set; }
+        [Name("Parent PID"), Required]
+        public int ParentPID { get; set; }
         [Name("Virtualized")]
         public string? Virtualized { get; set; }
 

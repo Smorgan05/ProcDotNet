@@ -20,16 +20,9 @@ namespace ProcDotNetTester
 
             // Process Tree Testing
             List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
+            var JsonProcStr = JsonHelper.JsonConvProcTree(ProcTree);
 
-            var options = new JsonSerializerOptions
-            {
-                ReferenceHandler = ReferenceHandler.Preserve,
-                Converters = { new CustomJsonConverter<ProcMon>() },
-                WriteIndented = true
-            };
-
-            string jsonString = JsonSerializer.Serialize(ProcTree, options);
-            Console.WriteLine(jsonString);
+            Console.WriteLine(JsonProcStr);
 
             // Event Classes
             //Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
