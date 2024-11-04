@@ -15,7 +15,7 @@ namespace ProcDotNet.Classes
         public bool isProcess = false;
         public bool isProfiling = false;
 
-        public List<ProcMon> Children { get; } = new List<ProcMon>();
+        public List<ProcMon> Children { get; set; } = new List<ProcMon>();
         public ProcMon Parent { get; set; }
 
         /// <summary>

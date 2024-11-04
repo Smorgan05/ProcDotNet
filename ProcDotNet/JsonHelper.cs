@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace ProcDotNet
 {
@@ -91,7 +92,7 @@ namespace ProcDotNet
                     ["Integrity"] = JsonValue.Create(prog.Integrity),
                     ["ProcessID"] = JsonValue.Create(prog.ProcessID),
                     ["ThreadID"] = JsonValue.Create(prog.ThreadID),
-                    ["ParentID"] = JsonValue.Create(prog.ParentPID),
+                    ["ParentPID"] = JsonValue.Create(prog.ParentPID),
                     ["Virtualized"] = JsonValue.Create(prog.Virtualized)
 
                 };
@@ -108,28 +109,51 @@ namespace ProcDotNet
 
             private ProcMon RecursiveDeserialize(JsonNode node)
             {
-                //if (node == null)
-                //{
-                //    return null;
-                //}
+                if (node == null)
+                {
+                    return null;
+                }
 
-                //var prog = new ProcMon
-                //{
-                //    Children = node["Children"].AsArray().Select(childNode => RecursiveDeserialize(childNode)),
+                var prog = new ProcMon
+                {
+                    // Children
+                    Children = node["Children"].AsArray().Select(childNode => RecursiveDeserialize(childNode)).ToList(),
 
-                //    //Application Data
-                //    ProcessName = node["ProcessName"].GetValue<string>(),
-                //    ImagePath = node["ImagePath"].GetValue<string>(),
-                //    CommandLine = node["CommandLine"].GetValue<string>(),
-                //    Company = node["Company"].GetValue<string>(),
-                //    Description = node["Description"].GetValue<string>(),
-                //    Version = node["Version"].GetValue<string>(),
-                //    Architecture = node["Architecture"].GetValue<string>(),
+                    //Application Data
+                    ProcessName = node["ProcessName"].GetValue<string>(),
+                    ImagePath = node["ImagePath"].GetValue<string>(),
+                    CommandLine = node["CommandLine"].GetValue<string>(),
+                    Company = node["Company"].GetValue<string>(),
+                    Description = node["Description"].GetValue<string>(),
+                    Version = node["Version"].GetValue<string>(),
+                    Architecture = node["Architecture"].GetValue<string>(),
 
+                    // Event Details
+                    SequenceNumber = node["SequenceNumber"].GetValue<string>(),
+                    EventClass = node["EventClass"].GetValue<string>(),
+                    Operation = node["Operation"].GetValue<string>(),
+                    DateAndTime = node["DateAndTime"].GetValue<DateTime>(),
+                    TimeOfDay = node["TimeOfDay"].GetValue<string>(),
+                    Category = node["Category"].GetValue<string>(),
+                    Path = node["Path"].GetValue<string>(),
+                    Detail = node["Detail"].GetValue<string>(),
+                    Result = node["Result"].GetValue<string>(),
+                    RelativeTime = node["RelativeTime"].GetValue<DateTime>(),
+                    Duration = node["Duration"].GetValue<string>(),
+                    CompletionTime = node["CompletionTime"].GetValue<DateTime>(),
 
-                //};
+                    //Process Mgmt
+                    UserName = node["UserName"].GetValue<string>(),
+                    Session = node["Session"].GetValue<int>(),
+                    AuthenticationID = node["AuthenticationID"].GetValue<string>(),
+                    Integrity = node["Integrity"].GetValue<string>(),
+                    ProcessID = node["ProcessID"].GetValue<int>(),
+                    ThreadID = node["ThreadID"].GetValue<int>(),
+                    ParentPID = node["ParentPID"].GetValue<int>()
 
-                //return prog;
+                };
+
+                return prog;
 
                 throw new NotImplementedException();
             }
