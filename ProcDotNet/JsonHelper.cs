@@ -159,7 +159,7 @@ namespace ProcDotNet
             }
         }
 
-        public static string JsonConvProcTree(List<ProcMon> ProcTree)
+        public static string JSONConvProcTree(List<ProcMon> ProcTree)
         {
             var options = new JsonSerializerOptions
             {
