@@ -15,8 +15,19 @@ namespace ProcDotNet.Classes
         public bool isProcess = false;
         public bool isProfiling = false;
 
+        /// <summary>
+        /// SubProcs / Profiling
+        /// </summary>
         public List<ProcMon> Children { get; set; } = new List<ProcMon>();
         public ProcMon Parent { get; set; }
+
+        /// <summary>
+        /// Various Operations
+        /// </summary>
+        public List<ProcMon> RegistryOps { get; set; } = new List<ProcMon>();
+        public List<ProcMon> FileSystemOps { get; set; } = new List<ProcMon>();
+        public List<ProcMon> NetworkOps { get; set; } = new List<ProcMon>();
+        public List<ProcMon> ProcessOps { get; set; } = new List<ProcMon>();
 
         /// <summary>
         /// RAW Processed Attributes

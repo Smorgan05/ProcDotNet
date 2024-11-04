@@ -12,6 +12,11 @@ namespace ProcDotNet
 {
     public class Processor
     {
+        /// <summary>
+        /// Process Tree Maker that takes ProcMon CSV File to parse into Process Tree Structure
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public static List<ProcMon> ProcessTreeMaker(string filePath)
         {
             // Load ProcMon CSV (with Fixed Times)
@@ -29,10 +34,26 @@ namespace ProcDotNet
             // Map KVPs to Process Nodes (Good)
             List<ProcMon> ProcessNodes = NodeProcessor.GetTreeList(ProcMaps);
 
-            // Inter Node Mapping (Good?)
+            // Inter Node Mapping (Good)
             return NodeProcessor.MakeTreeList(ProcessNodes);
         }
 
+        public static List<string> GetUniqueProcessList(string filePath)
+        {
+            // Load ProcMon CSV (with Fixed Times)
+            Dictionary<string, List<ProcMon>> ProcessDicts = LoadLists(filePath);
+
+            // Load Buckets
+            Dictionary<string, List<ProcMon>> ProcessBuckets = ProcessSorter(ProcessDicts[EventClass.Profiling]);
+
+            return ProcessBuckets.Keys.ToList();
+        }
+
+        /// <summary>
+        /// Process and Categorize CSV into Event Types
+        /// </summary>
+        /// <param name="testPath"></param>
+        /// <returns></returns>
         public static Dictionary<string, List<ProcMon>> LoadLists(string testPath)
         {
             // Raw Processing
@@ -70,6 +91,11 @@ namespace ProcDotNet
             return result;
         }
 
+        /// <summary>
+        /// Get Process Buckes for initial sorting
+        /// </summary>
+        /// <param name="processBuckets"></param>
+        /// <returns></returns>
         internal static List<KeyValuePair<ProcMon, List<ProcMon>>> GetProcessBucketGroups(Dictionary<string, List<ProcMon>> processBuckets)
         {
             List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
@@ -87,6 +113,11 @@ namespace ProcDotNet
             return result;
         }
 
+        /// <summary>
+        /// Map Processes to each other
+        /// </summary>
+        /// <param name="processBucketGroups"></param>
+        /// <returns></returns>
         internal static List<KeyValuePair<ProcMon, List<ProcMon>>> GetInterProcMapping(List<KeyValuePair<ProcMon, List<ProcMon>>> processBucketGroups)
         {
 
@@ -153,6 +184,12 @@ namespace ProcDotNet
             return Merge;
         }
 
+        /// <summary>
+        /// Merge Value Pairs and ensure that are no duplicates
+        /// </summary>
+        /// <param name="groups"></param>
+        /// <param name="singles"></param>
+        /// <returns></returns>
         internal static List<KeyValuePair<ProcMon, List<ProcMon>>> GetMerge(List<KeyValuePair<ProcMon, List<ProcMon>>> groups, List<KeyValuePair<ProcMon, List<ProcMon>>> singles)
         {
             List<KeyValuePair<ProcMon, List<ProcMon>>> result = new(groups);
@@ -178,6 +215,12 @@ namespace ProcDotNet
             return result;
         }
 
+        /// <summary>
+        /// Find ProcMon Object in Process List for mapping
+        /// </summary>
+        /// <param name="processes"></param>
+        /// <param name="par"></param>
+        /// <returns></returns>
         private static List<ProcMon> Childfinder(List<ProcMon> processes, ProcMon par)
         {
             var result = new List<ProcMon>();
@@ -192,6 +235,11 @@ namespace ProcDotNet
             return result;
         }
 
+        /// <summary>
+        /// Remove Duplicate ProcMon entries for Sorting
+        /// </summary>
+        /// <param name="records"></param>
+        /// <returns></returns>
         internal static Dictionary<string, List<ProcMon>> ProcessSorter(List<ProcMon> records)
         {
             //Gather Process Buckets

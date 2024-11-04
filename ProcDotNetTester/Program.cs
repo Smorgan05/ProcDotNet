@@ -21,21 +21,27 @@ namespace ProcDotNetTester
             // Process Tree Testing
             List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
 
-
-
+            // Serialize Process Tree to JSON
             var JsonProcStr = JsonHelper.JSONConvProcTree(ProcTree);
-
             Console.WriteLine(JsonProcStr);
 
-            // Event Classes
-            Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
-            var Registry = ProcessDicts[EventClass.Registry];
-            var Network = ProcessDicts[EventClass.Network];
-            var FileSystem = ProcessDicts[EventClass.FileSystem];
-            var Process = ProcessDicts[EventClass.Process];
-            var AllEvents = ProcessDicts[EventClass.All];
+            // Get Process List
+            List<string> ProcList = Processor.GetUniqueProcessList(testPath);
 
-            string json = JsonHelper.JSONConvEvents(ProcessDicts);
+            // Find Node from List (first)
+            var procMon = NodeProcessor.FindNodeFromListByProcessName(ProcTree, process);
+
+            Console.WriteLine();
+
+            // Event Classes
+            //Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
+            //var Registry = ProcessDicts[EventClass.Registry];
+            //var Network = ProcessDicts[EventClass.Network];
+            //var FileSystem = ProcessDicts[EventClass.FileSystem];
+            //var Process = ProcessDicts[EventClass.Process];
+            //var AllEvents = ProcessDicts[EventClass.All];
+
+            //string json = JsonHelper.JSONConvEvents(ProcessDicts);
             //string ProcTreeJson = JsonSerializer.Serialize(ProcTree, options);
 
             //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\Test.json", json);
@@ -48,7 +54,7 @@ namespace ProcDotNetTester
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
-            //Test.RecNodeListPrinter(ProcTree);
+            Test.RecNodeListPrinter(ProcTree);
             //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
 
             //var test = Support.JSONConv(ProcTree[0]);
