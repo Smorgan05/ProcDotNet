@@ -106,9 +106,4 @@ namespace ProcDotNet.Classes
         }
         #endregion
     }
-
-    public interface ISerializableNode
-    {
-        object ToSerializableObject(Func<JsonNode<ProcMon>, bool> excludeCondition);
-    }
 }
