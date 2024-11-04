@@ -25,7 +25,7 @@ namespace ProcDotNet
                     Network = ProcessDicts[EventClass.Network],
                     FileSystem = ProcessDicts[EventClass.FileSystem],
                     Process = ProcessDicts[EventClass.Process],
-                    All = ProcessDicts[EventClass.All]
+                    Profiling = ProcessDicts[EventClass.Profiling]
                 }
             };
 

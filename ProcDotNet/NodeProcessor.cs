@@ -79,7 +79,7 @@ namespace ProcDotNet
             {
                 foreach (var single in linkProcessNodes)
                 {
-                    var tempNode = RecFindbyProcessID(single, item.ProcessID);
+                    var tempNode = RecFindByProcessID(single, item.ProcessID);
                     if (tempNode != null && item != single)
                     {
                         result.Remove(tempNode);
