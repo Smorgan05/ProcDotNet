@@ -1,5 +1,6 @@
 ﻿using ProcDotNet;
 using ProcDotNet.Classes;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static ProcDotNetTester.Support;
@@ -18,24 +19,23 @@ namespace ProcDotNetTester
             // Load ProcMon CSV (with Fixed Times)
 
             // Process Tree Testing
-            List<JsonNode<ProcMon>> ProcTree = Processor.ProcessTreeMaker(testPath);
+            List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
 
-            //var options = new JsonSerializerOptions
-            //{
-            //    ReferenceHandler = ReferenceHandler.Preserve,
-            //    Converters = { new CustomJsonConverter<ProcMon>() },
-            //    WriteIndented = true
-            //};
+
+
+            var JsonProcStr = JsonHelper.JSONConvProcTree(ProcTree);
+
+            Console.WriteLine(JsonProcStr);
 
             // Event Classes
-            //Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
-            //var Registry = ProcessDicts[EventClass.Registry];
-            //var Network = ProcessDicts[EventClass.Network];
-            //var FileSystem = ProcessDicts[EventClass.FileSystem];
-            //var Process = ProcessDicts[EventClass.Process];
-            //var AllEvents = ProcessDicts[EventClass.All];
+            Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
+            var Registry = ProcessDicts[EventClass.Registry];
+            var Network = ProcessDicts[EventClass.Network];
+            var FileSystem = ProcessDicts[EventClass.FileSystem];
+            var Process = ProcessDicts[EventClass.Process];
+            var AllEvents = ProcessDicts[EventClass.All];
 
-            //string json = Support.JSONConvEvents(ProcessDicts);
+            string json = JsonHelper.JSONConvEvents(ProcessDicts);
             //string ProcTreeJson = JsonSerializer.Serialize(ProcTree, options);
 
             //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\Test.json", json);
@@ -48,7 +48,7 @@ namespace ProcDotNetTester
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
-            Test.RecNodeListPrinter(ProcTree);
+            //Test.RecNodeListPrinter(ProcTree);
             //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
 
             //var test = Support.JSONConv(ProcTree[0]);
