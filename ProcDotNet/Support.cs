@@ -1,10 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-
-using System.Globalization;
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using ProcDotNet.Classes;
+﻿using ProcDotNet.Classes;
 
 namespace ProcDotNet
 {

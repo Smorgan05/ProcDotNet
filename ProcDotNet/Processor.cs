@@ -1,12 +1,6 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-
-using CsvHelper;
+﻿using CsvHelper;
 using ProcDotNet.Classes;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 
 namespace ProcDotNet
 {
