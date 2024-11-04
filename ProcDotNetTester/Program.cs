@@ -1,12 +1,8 @@
 ﻿using ProcDotNet;
 using ProcDotNet.Classes;
-using static System.Net.Mime.MediaTypeNames;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 using System.Text.Json;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
+using System.Text.Json.Serialization;
+using static ProcDotNetTester.Support;
 
 namespace ProcDotNetTester
 {
@@ -22,32 +18,25 @@ namespace ProcDotNetTester
             // Load ProcMon CSV (with Fixed Times)
 
             // Process Tree Testing
-            List<TreeNode<ProcMon>> ProcTree = Processor.ProcessTreeMaker(testPath);
+            List<JsonNode<ProcMon>> ProcTree = Processor.ProcessTreeMaker(testPath);
+
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                Converters = { new CustomJsonConverter<ProcMon>() },
+                WriteIndented = true
+            };
 
             // Event Classes
-            Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
+            //Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
             //var Registry = ProcessDicts[EventClass.Registry];
             //var Network = ProcessDicts[EventClass.Network];
             //var FileSystem = ProcessDicts[EventClass.FileSystem];
             //var Process = ProcessDicts[EventClass.Process];
             //var AllEvents = ProcessDicts[EventClass.All];
 
-            string json = Support.JSONConvEvents(ProcessDicts);
-            string ProcTreeJson = Support.JSONConv(ProcTree);
-
-
-            //string output = JsonConvert.SerializeObject(ProcTree);
-
-            var serializer = new DataContractJsonSerializer(ProcTree.GetType());
-
-            using (FileStream stream = File.Create(@"C:\Users\Dark\Documents\ProcDotNet Local\ProcessTree.json"))
-            {
-
-                serializer.WriteObject(stream, ProcTree);
-            }
-
-            // Print or use the JSON string as needed
-            //Console.WriteLine(json);
+            //string json = Support.JSONConvEvents(ProcessDicts);
+            string ProcTreeJson = JsonSerializer.Serialize(ProcTree, options);
 
             //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\Test.json", json);
             //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\ProcessTree.json", ProcTreeJson);
@@ -59,7 +48,7 @@ namespace ProcDotNetTester
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
-            //Test.RecNodeListPrinter(ProcTree);
+            Test.RecNodeListPrinter(ProcTree);
             //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
 
             //var test = Support.JSONConv(ProcTree[0]);

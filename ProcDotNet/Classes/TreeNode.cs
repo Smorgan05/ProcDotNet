@@ -1,20 +1,22 @@
-﻿using System;
+﻿using CsvHelper.Configuration.Attributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ProcDotNet.Classes
 {
-    [Serializable, DataContract(IsReference = true)]
-    public class TreeNode<ProcMon> : IEnumerable<TreeNode<ProcMon>>
+    [Serializable]
+    public class JsonNode<ProcMon> : IEnumerable<JsonNode<ProcMon>>
     {
 
-        [DataMember] public ProcMon Data { get; set; }
-        [DataMember] public TreeNode<ProcMon> Parent { get; set; }
-        [DataMember] public ICollection<TreeNode<ProcMon>> Children { get; set; }
+        public ProcMon Data { get; set; }
+        public JsonNode<ProcMon> Parent { get; set; }
+        public ICollection<JsonNode<ProcMon>> Children { get; set; }
 
         //?[DataMember]
         public bool IsRoot
@@ -39,43 +41,40 @@ namespace ProcDotNet.Classes
             }
         }
 
-
-        public TreeNode(ProcMon data)
+        public JsonNode(ProcMon data)
         {
             Data = data;
-            Children = new LinkedList<TreeNode<ProcMon>>();
-
-            ElementsIndex = new LinkedList<TreeNode<ProcMon>>();
+            Children = new LinkedList<JsonNode<ProcMon>>();
+            ElementsIndex = new LinkedList<JsonNode<ProcMon>>();
             ElementsIndex.Add(this);
         }
 
-        public TreeNode<ProcMon> AddChild(ProcMon child)
+        public JsonNode()
         {
-            TreeNode<ProcMon> childNode = new(child) { Parent = this };
+        }
+
+        public JsonNode<ProcMon> AddChild(ProcMon child)
+        {
+            JsonNode<ProcMon> childNode = new(child) { Parent = this };
             Children.Add(childNode);
 
             RegisterChildForSearch(childNode);
             return childNode;
         }
 
-        public override string ToString()
-        {
-            return Data != null ? Data.ToString() : "[data null]";
-        }
-
 
         #region searching
 
-        private ICollection<TreeNode<ProcMon>> ElementsIndex { get; set; }
+        private ICollection<JsonNode<ProcMon>> ElementsIndex { get; set; }
 
-        private void RegisterChildForSearch(TreeNode<ProcMon> node)
+        private void RegisterChildForSearch(JsonNode<ProcMon> node)
         {
             ElementsIndex.Add(node);
             if (Parent != null)
                 Parent.RegisterChildForSearch(node);
         }
 
-        public TreeNode<ProcMon> FindTreeNode(Func<TreeNode<ProcMon>, bool> predicate)
+        public JsonNode<ProcMon> FindTreeNode(Func<JsonNode<ProcMon>, bool> predicate)
         {
             return ElementsIndex.FirstOrDefault(predicate);
         }
@@ -90,7 +89,7 @@ namespace ProcDotNet.Classes
             return GetEnumerator();
         }
 
-        public IEnumerator<TreeNode<ProcMon>> GetEnumerator()
+        public IEnumerator<JsonNode<ProcMon>> GetEnumerator()
         {
             yield return this;
             foreach (var directChild in Children)
@@ -100,7 +99,7 @@ namespace ProcDotNet.Classes
             }
         }
 
-        internal TreeNode<ProcMon> AddChild(TreeNode<ProcMon> two)
+        internal JsonNode<ProcMon> AddChild(JsonNode<ProcMon> two)
         {
             Children.Add(two);
             return this;
@@ -110,6 +109,6 @@ namespace ProcDotNet.Classes
 
     public interface ISerializableNode
     {
-        object ToSerializableObject(Func<TreeNode<ProcMon>, bool> excludeCondition);
+        object ToSerializableObject(Func<JsonNode<ProcMon>, bool> excludeCondition);
     }
 }

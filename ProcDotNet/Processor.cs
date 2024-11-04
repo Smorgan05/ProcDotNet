@@ -12,26 +12,25 @@ namespace ProcDotNet
 {
     public class Processor
     {
-        public static List<TreeNode<ProcMon>> ProcessTreeMaker(string filePath)
+        public static List<JsonNode<ProcMon>> ProcessTreeMaker(string filePath)
         {
             // Load ProcMon CSV (with Fixed Times)
-            var ProcessDicts = Processor.LoadLists(filePath);
+            Dictionary<string, List<ProcMon>> ProcessDicts = LoadLists(filePath);
 
-            // Load Buckes
-            var ProcessBuckets = Processor.ProcessSorter(ProcessDicts[EventClass.Profiling]);
+            // Load Buckets
+            Dictionary<string, List<ProcMon>> ProcessBuckets = ProcessSorter(ProcessDicts[EventClass.Profiling]);
 
             //Get Process Buckets
-            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcessBucketGroups = Processor.GetProcessBucketGroups(ProcessBuckets);
+            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcessBucketGroups = GetProcessBucketGroups(ProcessBuckets);
 
             // Map Disparate Processes
-            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = Processor.GetInterProcMapping(ProcessBucketGroups);
+            List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = GetInterProcMapping(ProcessBucketGroups);
 
             // Map KVPs to Process Nodes (Good)
-            List<TreeNode<ProcMon>> ProcessNodes = NodeProcessor.GetTreeList(ProcMaps);
+            List<JsonNode<ProcMon>> ProcessNodes = NodeProcessor.GetTreeList(ProcMaps);
 
             // Inter Node Mapping (Good?)
-            List<TreeNode<ProcMon>> LinkProcessNodes = NodeProcessor.MakeTreeList(ProcessNodes);
-            return LinkProcessNodes;
+            return NodeProcessor.MakeTreeList(ProcessNodes);
         }
 
         public static Dictionary<string, List<ProcMon>> LoadLists(string testPath)
@@ -67,23 +66,6 @@ namespace ProcDotNet
                 { EventClass.Registry, RegistryEvents },
                 { EventClass.All, AllEvents }
             };
-
-            return result;
-        }
-
-        internal static List<KeyValuePair<ProcMon, List<ProcMon>>> ConvertToKVP(List<TreeNode<ProcMon>> processNodes)
-        {
-            List<KeyValuePair<ProcMon, List<ProcMon>>> result = new();
-            foreach (var item in processNodes)
-            {
-                List<ProcMon> list = new List<ProcMon>();
-                foreach (var child in item.Children)
-                {
-                    list.Add(child.Data);
-                }
-                var element = new KeyValuePair<ProcMon, List<ProcMon>>(item.Data, list);
-                result.Add(element);
-            }
 
             return result;
         }

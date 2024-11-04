@@ -14,19 +14,19 @@ namespace ProcDotNet
         /// </summary>
         /// <param name="processBuckets"></param>
         /// <returns></returns>
-        internal static List<TreeNode<ProcMon>> GetTreeList(List<KeyValuePair<ProcMon, List<ProcMon>>> processBuckets)
+        internal static List<JsonNode<ProcMon>> GetTreeList(List<KeyValuePair<ProcMon, List<ProcMon>>> processBuckets)
         {
             //Setup and Pass
             List<KeyValuePair<ProcMon, List<ProcMon>>> orgBuckets = new(processBuckets);
 
             // Make Return Result
-            List<TreeNode<ProcMon>> TreeListRes = new List<TreeNode<ProcMon>>();
+            List<JsonNode<ProcMon>> TreeListRes = new List<JsonNode<ProcMon>>();
 
             // Perform One Layer Mapping
             foreach (var process in orgBuckets)
             {
                 // First Node in Tree List
-                TreeNode<ProcMon> singleRoot = new TreeNode<ProcMon>(process.Key);
+                JsonNode<ProcMon> singleRoot = new JsonNode<ProcMon>(process.Key);
 
                 // Add Children
                 foreach (var child in process.Value)
@@ -42,11 +42,11 @@ namespace ProcDotNet
             return TreeListRes;
         }
 
-        internal static List<TreeNode<ProcMon>> MakeTreeList(List<TreeNode<ProcMon>> processNodes)
+        internal static List<JsonNode<ProcMon>> MakeTreeList(List<JsonNode<ProcMon>> processNodes)
         {
-            List<TreeNode<ProcMon>> result = new();
+            List<JsonNode<ProcMon>> result = new();
 
-            foreach (TreeNode<ProcMon> branch in processNodes)
+            foreach (JsonNode<ProcMon> branch in processNodes)
             {
                 var MapResult = Mapper(processNodes, branch);
 
@@ -62,10 +62,10 @@ namespace ProcDotNet
             return result;
         }
 
-        private static List<TreeNode<ProcMon>> SingleDedup(List<TreeNode<ProcMon>> linkProcessNodes)
+        private static List<JsonNode<ProcMon>> SingleDedup(List<JsonNode<ProcMon>> linkProcessNodes)
         {
             //List<TreeNode<ProcMon>> temp = new List<TreeNode<ProcMon>>(linkProcessNodes);
-            List<TreeNode<ProcMon>> result = new List<TreeNode<ProcMon>>(linkProcessNodes);
+            List<JsonNode<ProcMon>> result = new List<JsonNode<ProcMon>>(linkProcessNodes);
 
             if (linkProcessNodes.Count == 0)
             {
@@ -88,9 +88,9 @@ namespace ProcDotNet
             return result;
         }
 
-        private static List<TreeNode<ProcMon>> CheckResult(List<TreeNode<ProcMon>> Nodes, TreeNode<ProcMon> mapResult)
+        private static List<JsonNode<ProcMon>> CheckResult(List<JsonNode<ProcMon>> Nodes, JsonNode<ProcMon> mapResult)
         {
-            var Result = new List<TreeNode<ProcMon>>(Nodes);
+            var Result = new List<JsonNode<ProcMon>>(Nodes);
             var temp = FindNode(Nodes, mapResult.Data.ProcessID);
             var parent = FindNode(Nodes, mapResult.Data.ParentPID);
 
@@ -110,7 +110,7 @@ namespace ProcDotNet
                 var check = parent.Children.Where(x => x.Data.ProcessID == mapResult.Data.ProcessID);
                 if (check.Count() > 1)
                 {
-                    TreeNode<ProcMon> remove = check.OrderByDescending(x => x.Children.Count).ToList().Skip(1).First();
+                    JsonNode<ProcMon> remove = check.OrderByDescending(x => x.Children.Count).ToList().Skip(1).First();
                     parent.Children.Remove(remove);
                 }
             }
@@ -123,7 +123,7 @@ namespace ProcDotNet
             return SingleDedup(Result);
         }
 
-        internal static TreeNode<ProcMon> Mapper(List<TreeNode<ProcMon>> Nodes, TreeNode<ProcMon> currentNode)
+        internal static JsonNode<ProcMon> Mapper(List<JsonNode<ProcMon>> Nodes, JsonNode<ProcMon> currentNode)
         {
             var ParentNode = FindNode(Nodes, currentNode.Data.ParentPID);
             if (ParentNode != null && ParentNode != currentNode && !ParentNode.Children.Contains(currentNode))
@@ -143,11 +143,11 @@ namespace ProcDotNet
             return ParentNode;
         }
 
-        internal static TreeNode<ProcMon>? FindNode(List<TreeNode<ProcMon>> Nodes, int processID)
+        internal static JsonNode<ProcMon>? FindNode(List<JsonNode<ProcMon>> Nodes, int processID)
         {
             foreach (var item in Nodes)
             {
-                TreeNode<ProcMon> found = RecFind(item, processID);
+                JsonNode<ProcMon> found = RecFind(item, processID);
                 if (found != null)
                 {
                     return found;
@@ -157,12 +157,12 @@ namespace ProcDotNet
         }
 
         // Search for a ProcessID in the specified node and all of its children
-        internal static TreeNode<ProcMon> RecFind(TreeNode<ProcMon> Node, int ProcessID)
+        internal static JsonNode<ProcMon> RecFind(JsonNode<ProcMon> Node, int ProcessID)
         {
             // find the string, starting with the current instance
             return RecFindNode(Node, ProcessID);
 
-            static TreeNode<ProcMon> RecFindNode(TreeNode<ProcMon> node, int ProcessID)
+            static JsonNode<ProcMon> RecFindNode(JsonNode<ProcMon> node, int ProcessID)
             {
                 if (node.Data.ProcessID == ProcessID)
                     return node;

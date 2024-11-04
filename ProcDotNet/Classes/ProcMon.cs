@@ -14,6 +14,8 @@ namespace ProcDotNet.Classes
         public bool isProcess = false;
         public bool isProfiling = false;
 
+        public ProcMon Parent { get; set; }
+        public List<ProcMon> Children { get; set; }
 
         /// <summary>
         /// RAW Processed Attributes

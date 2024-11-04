@@ -59,7 +59,7 @@ namespace ProcDotNetTester
             }
         }
 
-        internal static void RecNodeListPrinter(List<TreeNode<ProcMon>> processNodes)
+        internal static void RecNodeListPrinter(List<JsonNode<ProcMon>> processNodes)
         {
             foreach (var process in processNodes)
             {
@@ -69,7 +69,7 @@ namespace ProcDotNetTester
 
         }
 
-        internal static void RecNodePrinter(TreeNode<ProcMon> tree, string indent = "", bool last = false)
+        internal static void RecNodePrinter(JsonNode<ProcMon> tree, string indent = "", bool last = false)
         {
             Console.WriteLine(indent + "+- " + tree.Data.ProcessName + ": PPID: " + tree.Data.ParentPID + ": PID: " + tree.Data.ProcessID);
             indent += last ? "   " : "|  ";
