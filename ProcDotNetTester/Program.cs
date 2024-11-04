@@ -1,5 +1,6 @@
 ﻿using ProcDotNet;
 using ProcDotNet.Classes;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static ProcDotNetTester.Support;
@@ -18,14 +19,17 @@ namespace ProcDotNetTester
             // Load ProcMon CSV (with Fixed Times)
 
             // Process Tree Testing
-            List<JsonNode<ProcMon>> ProcTree = Processor.ProcessTreeMaker(testPath);
+            List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
 
-            //var options = new JsonSerializerOptions
-            //{
-            //    ReferenceHandler = ReferenceHandler.Preserve,
-            //    Converters = { new CustomJsonConverter<ProcMon>() },
-            //    WriteIndented = true
-            //};
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                Converters = { new CustomJsonConverter<ProcMon>() },
+                WriteIndented = true
+            };
+
+            string jsonString = JsonSerializer.Serialize(ProcTree, options);
+            Console.WriteLine(jsonString);
 
             // Event Classes
             //Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
@@ -48,7 +52,7 @@ namespace ProcDotNetTester
             //Test.DictionaryPrinter(timeOfDayBuckets);
 
             //Test Print Method
-            Test.RecNodeListPrinter(ProcTree);
+            //Test.RecNodeListPrinter(ProcTree);
             //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
 
             //var test = Support.JSONConv(ProcTree[0]);

@@ -12,7 +12,7 @@ namespace ProcDotNet
 {
     public class Processor
     {
-        public static List<JsonNode<ProcMon>> ProcessTreeMaker(string filePath)
+        public static List<ProcMon> ProcessTreeMaker(string filePath)
         {
             // Load ProcMon CSV (with Fixed Times)
             Dictionary<string, List<ProcMon>> ProcessDicts = LoadLists(filePath);
@@ -27,7 +27,7 @@ namespace ProcDotNet
             List<KeyValuePair<ProcMon, List<ProcMon>>> ProcMaps = GetInterProcMapping(ProcessBucketGroups);
 
             // Map KVPs to Process Nodes (Good)
-            List<JsonNode<ProcMon>> ProcessNodes = NodeProcessor.GetTreeList(ProcMaps);
+            List<ProcMon> ProcessNodes = NodeProcessor.GetTreeList(ProcMaps);
 
             // Inter Node Mapping (Good?)
             return NodeProcessor.MakeTreeList(ProcessNodes);

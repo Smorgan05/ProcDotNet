@@ -32,22 +32,20 @@ namespace ProcDotNetTester
                 ReferenceHandler = ReferenceHandler.IgnoreCycles,
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
             };
-            return System.Text.Json.JsonSerializer.Serialize(jsonObject, options);
+            return JsonSerializer.Serialize(jsonObject, options);
         }
 
-        public class CustomJsonConverter<T> : System.Text.Json.Serialization.JsonConverter<T>
+        public class CustomJsonConverter<T> : JsonConverter<T>
         {
             public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 JsonNode node = JsonNode.Parse(ref reader);
                 return (T)RecursiveDeserialize(node, typeToConvert);
             }
-
             public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
             {
                 JsonNode node = RecursiveSerialize(value); node.WriteTo(writer);
             }
-
             private JsonNode RecursiveSerialize(object value)
             {
                 if (value == null)
@@ -111,5 +109,6 @@ namespace ProcDotNetTester
                 }
             }
         }
+
     }
 }

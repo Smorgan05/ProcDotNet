@@ -14,26 +14,26 @@ namespace ProcDotNet
         /// </summary>
         /// <param name="processBuckets"></param>
         /// <returns></returns>
-        internal static List<JsonNode<ProcMon>> GetTreeList(List<KeyValuePair<ProcMon, List<ProcMon>>> processBuckets)
+        internal static List<ProcMon> GetTreeList(List<KeyValuePair<ProcMon, List<ProcMon>>> processBuckets)
         {
             //Setup and Pass
             List<KeyValuePair<ProcMon, List<ProcMon>>> orgBuckets = new(processBuckets);
 
             // Make Return Result
-            List<JsonNode<ProcMon>> TreeListRes = new List<JsonNode<ProcMon>>();
+            List<ProcMon> TreeListRes = new List<ProcMon>();
 
             // Perform One Layer Mapping
             foreach (var process in orgBuckets)
             {
                 // First Node in Tree List
-                JsonNode<ProcMon> singleRoot = new JsonNode<ProcMon>(process.Key);
+                ProcMon singleRoot = process.Key;
 
                 // Add Children
                 foreach (var child in process.Value)
                 {
                     if (process.Key != child)
                     {
-                        singleRoot.AddChild(child);
+                        singleRoot.Children.Add(child);
                     }
                 }
                 TreeListRes.Add(singleRoot);
@@ -42,11 +42,11 @@ namespace ProcDotNet
             return TreeListRes;
         }
 
-        internal static List<JsonNode<ProcMon>> MakeTreeList(List<JsonNode<ProcMon>> processNodes)
+        internal static List<ProcMon> MakeTreeList(List<ProcMon> processNodes)
         {
-            List<JsonNode<ProcMon>> result = new();
+            List<ProcMon> result = new();
 
-            foreach (JsonNode<ProcMon> branch in processNodes)
+            foreach (ProcMon branch in processNodes)
             {
                 var MapResult = Mapper(processNodes, branch);
 
@@ -62,10 +62,10 @@ namespace ProcDotNet
             return result;
         }
 
-        private static List<JsonNode<ProcMon>> SingleDedup(List<JsonNode<ProcMon>> linkProcessNodes)
+        private static List<ProcMon> SingleDedup(List<ProcMon> linkProcessNodes)
         {
             //List<TreeNode<ProcMon>> temp = new List<TreeNode<ProcMon>>(linkProcessNodes);
-            List<JsonNode<ProcMon>> result = new List<JsonNode<ProcMon>>(linkProcessNodes);
+            List<ProcMon> result = new List<ProcMon>(linkProcessNodes);
 
             if (linkProcessNodes.Count == 0)
             {
@@ -77,7 +77,7 @@ namespace ProcDotNet
             {
                 foreach (var single in linkProcessNodes)
                 {
-                    var tempNode = RecFind(single, item.Data.ProcessID);
+                    var tempNode = RecFind(single, item.ProcessID);
                     if (tempNode != null && item != single)
                     {
                         result.Remove(tempNode);
@@ -88,11 +88,11 @@ namespace ProcDotNet
             return result;
         }
 
-        private static List<JsonNode<ProcMon>> CheckResult(List<JsonNode<ProcMon>> Nodes, JsonNode<ProcMon> mapResult)
+        private static List<ProcMon> CheckResult(List<ProcMon> Nodes, ProcMon mapResult)
         {
-            var Result = new List<JsonNode<ProcMon>>(Nodes);
-            var temp = FindNode(Nodes, mapResult.Data.ProcessID);
-            var parent = FindNode(Nodes, mapResult.Data.ParentPID);
+            var Result = new List<ProcMon>(Nodes);
+            var temp = FindNode(Nodes, mapResult.ProcessID);
+            var parent = FindNode(Nodes, mapResult.ParentPID);
 
             // Dup Check
             if (temp == null)
@@ -107,10 +107,10 @@ namespace ProcDotNet
 
             else if (mapResult != null && parent != null)
             {
-                var check = parent.Children.Where(x => x.Data.ProcessID == mapResult.Data.ProcessID);
+                var check = parent.Children.Where(x => x.ProcessID == mapResult.ProcessID);
                 if (check.Count() > 1)
                 {
-                    JsonNode<ProcMon> remove = check.OrderByDescending(x => x.Children.Count).ToList().Skip(1).First();
+                    ProcMon remove = check.OrderByDescending(x => x.Children.Count).ToList().Skip(1).First();
                     parent.Children.Remove(remove);
                 }
             }
@@ -123,12 +123,12 @@ namespace ProcDotNet
             return SingleDedup(Result);
         }
 
-        internal static JsonNode<ProcMon> Mapper(List<JsonNode<ProcMon>> Nodes, JsonNode<ProcMon> currentNode)
+        internal static ProcMon Mapper(List<ProcMon> Nodes, ProcMon currentNode)
         {
-            var ParentNode = FindNode(Nodes, currentNode.Data.ParentPID);
+            var ParentNode = FindNode(Nodes, currentNode.ParentPID);
             if (ParentNode != null && ParentNode != currentNode && !ParentNode.Children.Contains(currentNode))
             {
-                ParentNode.AddChild(currentNode);
+                ParentNode.Children.Add(currentNode);
                 Mapper(Nodes, ParentNode);
             }
             else if (ParentNode == null && ParentNode != currentNode)
@@ -143,11 +143,11 @@ namespace ProcDotNet
             return ParentNode;
         }
 
-        internal static JsonNode<ProcMon>? FindNode(List<JsonNode<ProcMon>> Nodes, int processID)
+        internal static ProcMon? FindNode(List<ProcMon> Nodes, int processID)
         {
             foreach (var item in Nodes)
             {
-                JsonNode<ProcMon> found = RecFind(item, processID);
+                ProcMon found = RecFind(item, processID);
                 if (found != null)
                 {
                     return found;
@@ -157,14 +157,14 @@ namespace ProcDotNet
         }
 
         // Search for a ProcessID in the specified node and all of its children
-        internal static JsonNode<ProcMon> RecFind(JsonNode<ProcMon> Node, int ProcessID)
+        internal static ProcMon RecFind(ProcMon Node, int ProcessID)
         {
             // find the string, starting with the current instance
             return RecFindNode(Node, ProcessID);
 
-            static JsonNode<ProcMon> RecFindNode(JsonNode<ProcMon> node, int ProcessID)
+            static ProcMon RecFindNode(ProcMon node, int ProcessID)
             {
-                if (node.Data.ProcessID == ProcessID)
+                if (node.ProcessID == ProcessID)
                     return node;
 
                 foreach (var child in node.Children)
