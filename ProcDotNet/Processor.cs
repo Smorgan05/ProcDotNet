@@ -15,6 +15,7 @@ namespace ProcDotNet
         {
             // Load ProcMon CSV (with Fixed Times)
             Dictionary<string, List<ProcMon>> ProcessDicts = LoadLists(filePath);
+            //Dictionary<string, List<ProcMon>> ProcessDicts = LoadListsNew(filePath);
 
             // Load Buckets
             Dictionary<string, List<ProcMon>> ProcessBuckets = ProcessSorter(ProcessDicts[EventClass.Profiling]);
@@ -49,6 +50,46 @@ namespace ProcDotNet
         /// <param name="testPath"></param>
         /// <returns></returns>
         public static Dictionary<string, List<ProcMon>> LoadLists(string testPath)
+        {
+            // Raw Processing
+            Console.WriteLine("Processing CSV: " + testPath);
+            using var procLog = new StreamReader(testPath);
+            using var csv = new CsvReader(procLog, CultureInfo.InvariantCulture);
+            List<ProcMon> records = csv.GetRecords<ProcMon>().ToList();
+
+            // Time of Date Parsing Fix
+            List<ProcMon> recordsTimeFix = Support.FixTime(records);
+
+            //Get Types
+            Console.WriteLine("Categorizing Event Classes");
+            List<ProcMon> recordsFixed = PostProcessOld(records);
+
+            //Get EventClass Lists
+            List<ProcMon> FileSystemEvents = recordsFixed.Where(rec => rec.isFileSystem.Equals(true)).ToList();
+            List<ProcMon> NetworkEvents = recordsFixed.Where(rec => rec.isNetwork.Equals(true)).ToList();
+            List<ProcMon> ProcessEvents = recordsFixed.Where(rec => rec.isProcess.Equals(true)).ToList();
+            List<ProcMon> ProfileEvents = recordsFixed.Where(rec => rec.isProfiling.Equals(true)).ToList();
+            List<ProcMon> RegistryEvents = recordsFixed.Where(rec => rec.isRegistry.Equals(true)).ToList();
+
+            // Build Return
+            Dictionary<string, List<ProcMon>> result = new Dictionary<string, List<ProcMon>>
+            {
+                { EventClass.FileSystem, FileSystemEvents },
+                { EventClass.Network, NetworkEvents },
+                { EventClass.Process, ProcessEvents },
+                { EventClass.Profiling, ProfileEvents }, // Process Tree
+                { EventClass.Registry, RegistryEvents },
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Process and Categorize CSV into Event Types
+        /// </summary>
+        /// <param name="testPath"></param>
+        /// <returns></returns>
+        public static Dictionary<string, List<ProcMon>> LoadListsNew(string testPath)
         {
             // Raw Processing
             Console.WriteLine("Processing CSV: " + testPath);
@@ -265,6 +306,27 @@ namespace ProcDotNet
             }
 
             // Filter Result
+            return result;
+        }
+
+        /// <summary>
+        /// Set Event Types
+        /// </summary>
+        /// <param name="records"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private static List<ProcMon> PostProcessOld(List<ProcMon> records)
+        {
+            List<ProcMon> result = new List<ProcMon>(records);
+
+            foreach (ProcMon record in result)
+            {
+                record.isFileSystem = Support.FileSystemCheckOld(record);
+                record.isNetwork = Support.NetworkCheckOld(record);
+                record.isProcess = Support.ProcessCheckOld(record);
+                record.isProfiling = Support.ProfileCheckOld(record);
+                record.isRegistry = Support.RegistryCheckOld(record);
+            }
+
             return result;
         }
 

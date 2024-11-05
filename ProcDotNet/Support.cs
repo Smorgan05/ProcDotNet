@@ -8,7 +8,7 @@ namespace ProcDotNet
 
         internal static bool FileSystemCheck(ProcMon record)
         {
-            if (record.EventClass.Equals(EventClass.FileSystem, StringComparison.OrdinalIgnoreCase))
+            if (FileSystemEvent.Events.Contains(record.Operation, StringComparer.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -17,7 +17,7 @@ namespace ProcDotNet
 
         internal static bool NetworkCheck(ProcMon record)
         {
-            if (record.EventClass.Equals(EventClass.Network, StringComparison.OrdinalIgnoreCase))
+            if (NetworkEvent.Events.Contains(record.Operation, StringComparer.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -26,7 +26,7 @@ namespace ProcDotNet
 
         internal static bool ProcessCheck(ProcMon record)
         {
-            if (record.EventClass.Equals(EventClass.Process, StringComparison.OrdinalIgnoreCase))
+            if (ProcessEvent.Events.Contains(record.Operation, StringComparer.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -35,7 +35,7 @@ namespace ProcDotNet
 
         internal static bool ProfileCheck(ProcMon record)
         {
-            if (record.EventClass.Equals(EventClass.Profiling, StringComparison.OrdinalIgnoreCase))
+            if (ProcessEvent.Events.Contains(record.Operation, StringComparer.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -43,6 +43,51 @@ namespace ProcDotNet
         }
 
         internal static bool RegistryCheck(ProcMon record)
+        {
+            if (RegistryEvent.Events.Contains(record.Operation, StringComparer.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        internal static bool FileSystemCheckOld(ProcMon record)
+        {
+            if (record.EventClass.Equals(EventClass.FileSystem, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        internal static bool NetworkCheckOld(ProcMon record)
+        {
+            if (record.EventClass.Equals(EventClass.Network, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        internal static bool ProcessCheckOld(ProcMon record)
+        {
+            if (record.EventClass.Equals(EventClass.Process, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        internal static bool ProfileCheckOld(ProcMon record)
+        {
+            if (record.EventClass.Equals(EventClass.Profiling, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        internal static bool RegistryCheckOld(ProcMon record)
         {
             if (record.EventClass.Equals(EventClass.Registry, StringComparison.OrdinalIgnoreCase))
             {

@@ -59,16 +59,16 @@
 
     internal class ProcessEvent
     {
-        public const string ProcessCreate = "ProcessCreate";
-        public const string ProcessExit = "ProcessExit";
-        public const string ProcessStart = "ProcessStart";
-        public const string ProcessStatistics = "ProcessStatistics";
-        public const string ThreadCreate = "ThreadCreate";
-        public const string ThreadExit = "ThreadExit";
-        public const string ThreadProfile = "ThreadProfile";
-        public const string LoadImage = "LoadImage";
+        public const string ProcessCreate = "Process Create";
+        public const string ProcessExit = "Process Exit";
+        public const string ProcessStart = "Process Start";
+        public const string ProcessStatistics = "Process Statistics";
+        public const string ThreadCreate = "Thread Create";
+        public const string ThreadExit = "Thread Exit";
+        public const string ThreadProfile = "Thread Profile";
+        public const string LoadImage = "Load Image";
         public const string SystemStatistics = "SystemStatistics";
-        public static readonly string[] Events = { "ProcessCreate", "ProcessExit", "ProcessStart", "ProcessStatistics", "ThreadCreate", "ThreadExit", "ThreadProfile", "LoadImage", "SystemStatistics" };
+        public static readonly string[] Events = { "Process Create", "Process Exit", "Process Start", "Process Statistics", "Thread Create", "Thread Exit", "Thread Profile", "Load Image", "System Statistics" };
     }
 
     internal class NetworkEvent
@@ -93,19 +93,26 @@
         public const string UDPSend = "UDP Send";
         public const string UDPTCPCOPY = "UDP TCPCOPY";
         public const string UDPUnknown = "UDP Unknown";
-        public static readonly string[] Events = { "TCP Accept", "TCP Connect", "TCP Disconnect", "TCP Other", "TCP Receive", "TCP Reconnect", "TCP Retransmit", "TCP Send", "TCP TCPCopy", "TCP Unknown", "UDP Accept", "UDP Connect", "UDP Disconnect", "UDP Other", "UDP Recieve", "UDP Reconnect", "UDP Retransmit", "UDP Send", "UDP TCPCOPY", "UDP Unknown" };
+        public static readonly string[] Events = { "TCP Accept", "TCP Connect", "TCP Disconnect", "TCP Other", "TCP Receive", "TCP Reconnect", "TCP Retransmit", "TCP Send", "TCP TCPCopy", "TCP Unknown", "UDP Accept", "UDP Connect", "UDP Disconnect", "UDP Other", "UDP Receive", "UDP Reconnect", "UDP Retransmit", "UDP Send", "UDP TCPCOPY", "UDP Unknown" };
     }
 
     internal class ProfilingEvent
     {
-        public const string ProcessProfiling = "ProcessProfiling";
-        public const string DebugOutputProfiling = "DebugOutputProfiling";
-        public const string ThreadProfiling = "ThreadProfiling";
-        public static readonly string[] Events = { "ProcessProfiling", "DebugOutputProfiling", "ThreadProfiling" };
+        public const string ProcessProfiling = "Process Profiling";
+        public const string DebugOutputProfiling = "Debug Output Profiling";
+        public const string ThreadProfiling = "Thread Profiling";
+        public static readonly string[] Events = { "Process Profiling", "DebugOutputProfiling", "Thread Profiling" };
     }
 
     internal class FileSystemEvent
     {
+        //Missing
+        public const string IRP_MJ_CLOSE = "IRP_MJ_CLOSE";
+        public const string FASTIO_ACQUIRE_FOR_CC_FLUSH = "FASTIO_ACQUIRE_FOR_CC_FLUSH";
+        public const string FASTIO_RELEASE_FOR_CC_FLUSH = "FASTIO_RELEASE_FOR_CC_FLUSH";
+        public const string FASTIO_RELEASE_FOR_SECTION_SYNCHRONIZATION = "FASTIO_RELEASE_FOR_SECTION_SYNCHRONIZATION";
+
+        //Found
         public const string CancelRemoveDevice = "CancelRemoveDevice";
         public const string CancelStopDevice = "CancelStopDevice";
         public const string CloseFile = "CloseFile";
@@ -226,7 +233,7 @@
         public const string UnlockFileByKey = "UnlockFileByKey";
         public const string UnlockFileSingle = "UnlockFileSingle";
         public const string WriteFile = "WriteFile";
-        public static readonly string[] Events = { "CancelRemoveDevice", "CancelStopDevice", "CloseFile", "CreateFile", "CreateFileMapping", "CreateMailSlot", "CreatePipe", "DeviceChange", "DeviceIOControl", "DeviceUsuageNotification", "Eject", "FileSystemControl", "FilterResourceRequirements", "FlushBuffersFile", "InternalDeviceIOControl", "LockFile", "NotifyChangeDirectory", "Power", "QueryAllInformaitonFile", "QueryAttributeCacheInformation", "QueryAttributeInformationVolume", "QueryAttributeTag", "QueryAttributeTagFile", "QueryBasicInformationFile", "QueryBusInformation", "QueryCapabilities", "QueryCaseSensitiveInformation", "QueryCaseSensitiveInformationForceAccessCheck", "QueryCompressInformationFile", "QueryControlInformationVolume", "QueryDesiredStorageClassInformation", "QueryDevinceInformationVolume", "QueryDeviceRelations", "QueryDeviceText", "QueryDirectory", "QueryEAFile", "QueryEAInformationFile", "QueryEndofFile", "QueryFileInternalInformationFile", "QueryFileQuota", "QueryFullSizeInformationVolume", "QueryHardLinkFullInformation", "QueryID", "QueryIDBothDirectory", "QueryIDExtdBothDirectoryInformation", "QueryIDExtdDirectoryInformation", "QueryIDGlobalTXDirectoryInformation", "QueryIDInformation", "QueryInformationVolume", "QueryInterface", "QueryIOPriorityHint", "QueryIsRemoveDeviceInformation", "QueryLabelInformationVolume", "QueryLegacyBusInformation", "QueryLinkInformationBypassAccessCheck", "QueryLinkInformationEx", "QueryLinks", "QueryMemoryPartitionInformation", "QueryMoveClusterInformationFile", "QueryNameInformationFile", "QueryNetworkOpenInformationFile", "QueryNetworkPhysicalNameInformationFile", "QueryNormalizedNameInformationFile", "QueryNumaNodeInformation", "QueryObjectIDInformationVolume", "QueryOpen", "QueryPNPDeviceState", "QueryPositionInformationFile", "QueryRemoteProtocolInformation", "QueryRemoveDevice", "QueryRenameInformationBypassAccessCheck", "QueryResourceRequirements", "QueryResources", "QuerySatLXInformation", "QuerySecurityFile", "QueryShortNameInformationFile", "QuerySizeInformtionVolume", "QueryStandardInformationFile", "QueryStandardLinkInformation", "QueryStatInformation", "QueryStopDevice", "QueryStorageReservedIDInformation", "QueryStreamInformationFile", "QueryValidDataLength", "QueryVolumeNameInformation", "ReadConfig", "ReadFile", "RemoveDevice", "SetBasicInformationFile", "SetDispositionInformationEx", "SetDispositionInformationFile", "SetEAFile", "SetEndOfFileInformationFile", "SetFileQuota", "SetFileStreamInformation", "SetLinkInformationFile", "SetLock", "SetPipeInformation", "SetPositionInformationFile", "SetRenameInformationEx", "SetRenameInformationExBypassAccessCheck", "SetRenameInformationFile", "SetReplaceCompletionInformation", "SetSecurityFile", "SetShortNameInformation", "SetStorageReservedIDInformation", "SetValidDataLengthInformationFile", "SetVolumeInformation", "Shutdown", "StartDevice", "StopDevice", "SurpriseRemoval", "SystemControl", "WriteConfig", "VolumeDismount", "VolumeMount", "UnlockFileAll", "UnlockFileByKey", "UnlockFileSingle", "WriteFile" };
+        public static readonly string[] Events = { "CancelRemoveDevice", "CancelStopDevice", "CloseFile", "CreateFile", "CreateFileMapping", "CreateMailSlot", "CreatePipe", "DeviceChange", "DeviceIOControl", "DeviceUsuageNotification", "Eject", "FileSystemControl", "FilterResourceRequirements", "FlushBuffersFile", "InternalDeviceIOControl", "LockFile", "NotifyChangeDirectory", "Power", "QueryAllInformaitonFile", "QueryAttributeCacheInformation", "QueryAttributeInformationVolume", "QueryAttributeTag", "QueryAttributeTagFile", "QueryBasicInformationFile", "QueryBusInformation", "QueryCapabilities", "QueryCaseSensitiveInformation", "QueryCaseSensitiveInformationForceAccessCheck", "QueryCompressInformationFile", "QueryControlInformationVolume", "QueryDesiredStorageClassInformation", "QueryDevinceInformationVolume", "QueryDeviceRelations", "QueryDeviceText", "QueryDirectory", "QueryEAFile", "QueryEAInformationFile", "QueryEndofFile", "QueryFileInternalInformationFile", "QueryFileQuota", "QueryFullSizeInformationVolume", "QueryHardLinkFullInformation", "QueryID", "QueryIDBothDirectory", "QueryIDExtdBothDirectoryInformation", "QueryIDExtdDirectoryInformation", "QueryIDGlobalTXDirectoryInformation", "QueryIDInformation", "QueryInformationVolume", "QueryInterface", "QueryIOPriorityHint", "QueryIsRemoveDeviceInformation", "QueryLabelInformationVolume", "QueryLegacyBusInformation", "QueryLinkInformationBypassAccessCheck", "QueryLinkInformationEx", "QueryLinks", "QueryMemoryPartitionInformation", "QueryMoveClusterInformationFile", "QueryNameInformationFile", "QueryNetworkOpenInformationFile", "QueryNetworkPhysicalNameInformationFile", "QueryNormalizedNameInformationFile", "QueryNumaNodeInformation", "QueryObjectIDInformationVolume", "QueryOpen", "QueryPNPDeviceState", "QueryPositionInformationFile", "QueryRemoteProtocolInformation", "QueryRemoveDevice", "QueryRenameInformationBypassAccessCheck", "QueryResourceRequirements", "QueryResources", "QuerySatLXInformation", "QuerySecurityFile", "QueryShortNameInformationFile", "QuerySizeInformtionVolume", "QueryStandardInformationFile", "QueryStandardLinkInformation", "QueryStatInformation", "QueryStopDevice", "QueryStorageReservedIDInformation", "QueryStreamInformationFile", "QueryValidDataLength", "QueryVolumeNameInformation", "ReadConfig", "ReadFile", "RemoveDevice", "SetBasicInformationFile", "SetDispositionInformationEx", "SetDispositionInformationFile", "SetEAFile", "SetEndOfFileInformationFile", "SetFileQuota", "SetFileStreamInformation", "SetLinkInformationFile", "SetLock", "SetPipeInformation", "SetPositionInformationFile", "SetRenameInformationEx", "SetRenameInformationExBypassAccessCheck", "SetRenameInformationFile", "SetReplaceCompletionInformation", "SetSecurityFile", "SetShortNameInformation", "SetStorageReservedIDInformation", "SetValidDataLengthInformationFile", "SetVolumeInformation", "Shutdown", "StartDevice", "StopDevice", "SurpriseRemoval", "SystemControl", "WriteConfig", "VolumeDismount", "VolumeMount", "UnlockFileAll", "UnlockFileByKey", "UnlockFileSingle", "WriteFile", "IRP_MJ_CLOSE", "FASTIO_ACQUIRE_FOR_CC_FLUSH", "FASTIO_RELEASE_FOR_CC_FLUSH", "FASTIO_RELEASE_FOR_SECTION_SYNCHRONIZATION" };
     }
 
     internal class Operation
@@ -294,6 +301,14 @@
         public const string UDPUnknown = "UDP Unknown";
 
         // File System Events
+
+        //Missing
+        public const string IRP_MJ_CLOSE = "IRP_MJ_CLOSE";
+        public const string FASTIO_ACQUIRE_FOR_CC_FLUSH = "FASTIO_ACQUIRE_FOR_CC_FLUSH";
+        public const string FASTIO_RELEASE_FOR_CC_FLUSH = "FASTIO_RELEASE_FOR_CC_FLUSH";
+        public const string FASTIO_RELEASE_FOR_SECTION_SYNCHRONIZATION = "FASTIO_RELEASE_FOR_SECTION_SYNCHRONIZATION";
+
+        //Found
         public const string CancelRemoveDevice = "CancelRemoveDevice";
         public const string CancelStopDevice = "CancelStopDevice";
         public const string CloseFile = "CloseFile";

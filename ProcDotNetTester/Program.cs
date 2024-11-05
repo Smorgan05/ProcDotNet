@@ -20,15 +20,15 @@ namespace ProcDotNetTester
 
 
             // Process Tree Testing
-            List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
+            //List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
             //string JsonProcStr = JsonHelper.JSONConvProcTree(ProcTree);
             //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\ProcessTree-nonindent.json", JsonProcStr);
             //Console.WriteLine(JsonProcStr);
 
             // Event Classes
-            //Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
-            //string JsonDicts = JsonHelper.JSONConvEvents(ProcessDicts);
-            //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\All.json-nonindent", JsonDicts);
+            Dictionary<string, List<ProcMon>> ProcessDicts = Processor.LoadLists(testPath);
+            string JsonDicts = JsonHelper.JSONConvEvents(ProcessDicts);
+            File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\All-NEW-2.json", JsonDicts);
 
             // Get Process List
             //List<string> ProcList = Processor.GetUniqueProcessList(testPath);
@@ -47,7 +47,7 @@ namespace ProcDotNetTester
             //var Profiling = ProcessDicts[EventClass.Profiling];
 
             //Test Print Method
-            Test.RecNodeListPrinter(ProcTree);
+            //Test.RecNodeListPrinter(ProcTree);
 
             //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
             //Test.RecNodePrinter(node.Children.First());
