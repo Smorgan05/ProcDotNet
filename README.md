@@ -7,8 +7,4 @@ Version: 0.2
 3. Adjust code to point to CSV.
 
 ## Project Status
-* Process Full Procmon CSV - Complete
-* Map Full Procmon CSV to Objects - Complete
-* Establish Flat Process Mapping - Complete
-* Sort by Time of Date - Complete
-* Create Linked List Data Structure - In Progress
+* Development is in process with core functionality
