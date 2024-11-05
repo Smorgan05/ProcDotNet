@@ -23,10 +23,11 @@ namespace ProcDotNet.Classes
         /// <summary>
         /// Various Operations
         /// </summary>
-        public List<ProcMon> RegistryOps { get; set; } = new List<ProcMon>();
-        public List<ProcMon> FileSystemOps { get; set; } = new List<ProcMon>();
-        public List<ProcMon> NetworkOps { get; set; } = new List<ProcMon>();
-        public List<ProcMon> ProcessOps { get; set; } = new List<ProcMon>();
+        public List<ProcMon> EventsRegistry { get; set; } = new List<ProcMon>();
+        public List<ProcMon> EventsFileSystem { get; set; } = new List<ProcMon>();
+        public List<ProcMon> EventsNetwork { get; set; } = new List<ProcMon>();
+        public List<ProcMon> EventsProcess { get; set; } = new List<ProcMon>();
+        public List<ProcMon> EventsProfiling { get; set; } = new List<ProcMon>();
 
         /// <summary>
         /// RAW Processed Attributes

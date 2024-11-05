@@ -2,6 +2,9 @@
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Collections;
 
 namespace ProcDotNet
 {
@@ -56,6 +59,13 @@ namespace ProcDotNet
 
                 JsonObject obj = new JsonObject
                 {
+                    // Event Types
+                    ["EventsRegistry"] = JsonValue.Create(prog.EventsRegistry),
+                    ["EventsFileSystem"] = JsonValue.Create(prog.EventsFileSystem),
+                    ["EventsNetwork"] = JsonValue.Create(prog.EventsNetwork),
+                    ["EventsProcess"] = JsonValue.Create(prog.EventsProcess),
+                    ["EventsProfiling"] = JsonValue.Create(prog.EventsProfiling),
+
                     //Application Data
                     ["ProcessName"] = JsonValue.Create(prog.ProcessName),
                     ["ImagePath"] = JsonValue.Create(prog.ImagePath),
@@ -113,7 +123,14 @@ namespace ProcDotNet
                     // Children
                     Children = node["Children"].AsArray().Select(childNode => RecursiveDeserialize(childNode)).ToList(),
 
-                    //Application Data
+                    // Events
+                    EventsFileSystem = node["EventsFileSystem"].AsArray().Select(childNode => RecursiveDeserialize(childNode)).ToList(),
+                    EventsNetwork = node["EventsNetwork"].AsArray().Select(childNode => RecursiveDeserialize(childNode)).ToList(),
+                    EventsRegistry = node["EventsRegistry"].AsArray().Select(childNode => RecursiveDeserialize(childNode)).ToList(),
+                    EventsProcess = node["EventsProcess"].AsArray().Select(childNode => RecursiveDeserialize(childNode)).ToList(),
+                    EventsProfiling = node["EventProfiling"].AsArray().Select(childNode => RecursiveDeserialize(childNode)).ToList(),
+
+                    // Application Data
                     ProcessName = node["ProcessName"].GetValue<string>(),
                     ImagePath = node["ImagePath"].GetValue<string>(),
                     CommandLine = node["CommandLine"].GetValue<string>(),
