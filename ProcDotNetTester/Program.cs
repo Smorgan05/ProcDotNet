@@ -16,10 +16,11 @@ namespace ProcDotNetTester
             string SigProcess = "Signal.exe";
             string testPath = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile.CSV";
             string testPathNew = @"C:\Users\Dark\Documents\ProcDotNet Local\Logfile_12_26_2023.CSV";
+            string PathNew = @"C:\Users\Dark\Documents\ProcDotNet Local\New Logfile 11.5.2024.CSV";
 
 
             // Process Tree Testing
-            //List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
+            List<ProcMon> ProcTree = Processor.ProcessTreeMaker(testPath);
             //string JsonProcStr = JsonHelper.JSONConvProcTree(ProcTree);
             //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\ProcessTree-nonindent.json", JsonProcStr);
             //Console.WriteLine(JsonProcStr);
@@ -35,8 +36,8 @@ namespace ProcDotNetTester
             // Find Node from List (first)
             //var procMon = NodeProcessor.FindNodeFromListByProcessName(ProcTree, process);
 
-            string node = Core.NodeFilter(testPath, SigProcess, EventClass.All);
-            File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\Specific Node.json", node);
+            //string node = Core.NodeFilter(testPathNew, process, EventClass.All);
+            //File.WriteAllText(@"C:\Users\Dark\Documents\ProcDotNet Local\Specific Node2.json", node);
 
             //Console.WriteLine();
             //var Registry = ProcessDicts[EventClass.Registry];
@@ -46,7 +47,7 @@ namespace ProcDotNetTester
             //var Profiling = ProcessDicts[EventClass.Profiling];
 
             //Test Print Method
-            //Test.RecNodeListPrinter(ProcTree);
+            Test.RecNodeListPrinter(ProcTree);
 
             //Test.DictionaryPrinter(ProcessDicts, EventClass.Registry);
             //Test.RecNodePrinter(node.Children.First());

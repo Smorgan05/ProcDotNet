@@ -35,7 +35,7 @@ namespace ProcDotNet.Classes
         //Application Data
         [Name("Process Name"), Required]
         public string ProcessName { get; set; }
-        [Name("Image Path"), Required]
+        [Name("Image Path")]
         public string ImagePath { get; set; }
         [Name("Command Line")]
         public string? CommandLine { get; set; }
@@ -58,7 +58,7 @@ namespace ProcDotNet.Classes
         [Name("Operation"), Required]
         public string Operation { get; set; }
 
-        [Name("Date & Time"), Required]
+        [Name("Date & Time")]
         public DateTime DateAndTime { get; set; }
 
         [Name("Time of Day"), Required]
@@ -70,10 +70,10 @@ namespace ProcDotNet.Classes
         [Name("Path")]
         public string? Path { get; set; }
 
-        [Name("Detail")]
+        [Name("Detail"), Required]
         public string? Detail { get; set; }
 
-        [Name("Result")]
+        [Name("Result"), Required]
         public string? Result { get; set; }
 
         [Name("Relative Time")]
@@ -94,7 +94,7 @@ namespace ProcDotNet.Classes
         public string? AuthenticationID { get; set; }
         [Name("Integrity")]
         public string? Integrity { get; set; }
-        [Name("PID"), Required]
+        [Name("PID")]
         public int ProcessID { get; set; }
         [Name("TID")]
         public int? ThreadID { get; set; }

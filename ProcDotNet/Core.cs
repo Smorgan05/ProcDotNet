@@ -16,8 +16,13 @@ namespace ProcDotNet
             // Single Node with Children (not multi yet)
             string result = string.Empty;
             var ProcTree = Processor.ProcessTreeMaker(filePath);
-            var procMon = NodeProcessor.FindNodeFromListByProcessName(ProcTree, process);
             var EventDict = Processor.LoadLists(filePath);
+
+            //var ProcTreeEvents = Processor.ProcessTreeMakerNew(filePath);
+            //Dictionary<string, List<ProcMon>>? EventDict = ProcTreeEvents.Keys.FirstOrDefault();
+            //List<ProcMon>? ProcTree = ProcTreeEvents.Values.FirstOrDefault();
+
+            var procMon = NodeProcessor.FindNodeFromListByProcessName(ProcTree, process);
 
             if (!EventClass.Types.Contains(Events))
             {
@@ -30,6 +35,7 @@ namespace ProcDotNet
                 if (Events.Equals(EventClass.All))
                 {
                     procMonEve = EventFilterAndAttachNew(EventDict, procMon);
+                    
                     result = JsonHelper.JSONConvProcTree(procMonEve);
                 }
                 else

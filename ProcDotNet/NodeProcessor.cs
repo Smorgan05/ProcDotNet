@@ -152,12 +152,12 @@ namespace ProcDotNet
             }
             return null;
         }
-        internal static ProcMon RecFindByProcessID(ProcMon Node, int ProcessID)
+        internal static ProcMon? RecFindByProcessID(ProcMon Node, int ProcessID)
         {
             // find the string, starting with the current instance
             return RecFindNode(Node, ProcessID);
 
-            static ProcMon RecFindNode(ProcMon node, int ProcessID)
+            static ProcMon? RecFindNode(ProcMon node, int ProcessID)
             {
                 if (node.ProcessID == ProcessID)
                     return node;
@@ -168,7 +168,6 @@ namespace ProcDotNet
                     if (result != null)
                         return result;
                 }
-
                 return null;
             }
 
@@ -224,7 +223,7 @@ namespace ProcDotNet
 
             static ProcMon RecFindNode(ProcMon node, string ProcessName)
             {
-                if (node.ProcessName == ProcessName)
+                if (node.ProcessName.Equals(ProcessName, StringComparison.OrdinalIgnoreCase))
                     return node;
 
                 foreach (var child in node.Children)

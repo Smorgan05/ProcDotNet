@@ -117,7 +117,8 @@ namespace ProcDotNet
 
             // Conversions
             List<KeyValuePair<ProcMon, List<ProcMon>>> singlesKeyVal = processBucketGroups.Where(x => x.Value.Count == 0).ToList();
-            List<ProcMon> singlesList = singlesKeyVal.ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
+            //List<ProcMon> singlesList = singlesKeyVal.ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
+            List<ProcMon> singlesList = singlesKeyVal.Select(x => x.Key).ToList();
 
             // Parent
             foreach (var item in singlesList)
