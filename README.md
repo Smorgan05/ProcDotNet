@@ -8,3 +8,6 @@ Version: 0.2
 
 ## Project Status
 * Development is in process with core functionality
+
+## UI Prototype Link
+* https://www.figma.com/board/SYpYBmiCf8xkCskkw8NUBH/ProcMon-Viz-UI?node-id=0-1&p=f

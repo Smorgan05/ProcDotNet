@@ -58,7 +58,7 @@ namespace ProcDotNet.Classes
         [Name("Operation"), Required]
         public string Operation { get; set; }
 
-        [Name("Date & Time")]
+        [Name("Date & Time"), Required]
         public DateTime DateAndTime { get; set; }
 
         [Name("Time of Day"), Required]
