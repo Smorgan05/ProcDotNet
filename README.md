@@ -6,6 +6,11 @@ Version: 0.2
 2. Save output as CSV.
 3. Adjust code to point to CSV.
 
+## Usage Instructions Slim
+1. Run Procmon with Parent PID and Data & Time enabled.
+2. Save output as CSV
+3. Adjust code to point to CSV
+
 ## Project Status
 * Development is in process with core functionality
 
